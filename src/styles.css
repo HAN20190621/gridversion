@@ -1,0 +1,285 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+/* .square {
+  position: flex;
+  font-family: "Poppins", Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  width: 3cm;
+} */
+
+.container {
+  max-width: 600px;
+  margin: 30px auto;
+  overflow: auto;
+  min-height: 300px;
+  border: 1px solid steelblue;
+  padding: 30px;
+  border-radius: 5px;
+  background-color: lawngreen;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap; /* allow for the items to wrap */
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn {
+  border: none;
+  font-size: 17px;
+  font-family: inherit;
+  margin: 5px;
+  padding: 10px 20px;
+  background: #000;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.btn:active {
+  box-align: none;
+  transform: scale(0.98);
+  -webkit-transform: scale(0.98);
+  -moz-transform: scale(0.98);
+  -ms-transform: scale(0.98);
+  -o-transform: scale(0.98);
+}
+
+.btn-selected {
+  opacity: 0.7;
+  color: grey;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+*/ footer {
+  margin-top: 30px;
+  text-align: center;
+}
+
+/* players */
+
+.players {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.player-name {
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  display: inline-flex;
+  flex-direction: row;
+  font-size: 17px;
+  padding: 5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+}
+
+.player-name > span:first-child {
+  cursor: pointer;
+  width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Edit Player - form controls */
+.add-form {
+  border: none;
+  display: inline-flex;
+  flex-direction: column;
+  font-size: 17px;
+  margin: 20px 20px;
+  max-width: 400px;
+  min-height: 200px;
+  overflow: auto;
+  position: relative;
+}
+
+.add-form input,
+.add-form textarea {
+  border-radius: 3px;
+  border-style: none;
+  box-shadow: 0 1px 3px rgb(138, 137, 137);
+  font-size: 1.2em;
+  height: 30px;
+  outline: none;
+  padding: 4px;
+  resize: none;
+  width: 100%;
+}
+
+/* top right hand corner */
+.add-form #close {
+  position: absolute;
+  right: 15px;
+  top: 11px;
+  color: grey;
+  z-index: 2;
+}
+
+.form-control {
+  border: 1px solid steelblue;
+  border-radius: 5px;
+  display: inline-flex;
+  flex-direction: column;
+  font-size: 17px;
+  margin: 20px 20px;
+  max-width: 400px;
+  min-height: 200px;
+  overflow: auto;
+  padding: 30px;
+  background-color: red;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.form-control label {
+  display: block;
+}
+
+/* board game */
+.game {
+  width: fit-content;
+  align-items: center;
+}
+
+.board-container {
+  display: inline-block;
+  position: relative;
+  background-color: red;
+  /* height: 180px;
+  width: 165px; */
+}
+
+.board {
+  position: absolute;
+  /* border: 1px solid purple; */
+  align-items: center;
+  width: inherit;
+  height: inherit;
+  /* no-repeat 0px 0px / 100px 100px; */
+}
+
+.board.stack-top {
+  z-index: 9;
+  opacity: 0.5;
+  pointer-events: none;
+  /* margin: 20px; */
+  background-color: blue;
+  background: linear-gradient(
+    to bottom left,
+    transparent calc(50% - 4px),
+    red calc(50% - 2px),
+    red calc(50% + 2px),
+    transparent calc(50% + 4px)
+  );
+}
+
+/* use inline block to have div automatically fit content */
+
+.board-row::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.status {
+  margin-bottom: 10px;
+}
+
+.square {
+  /* background: #fff; */
+  background: red;
+  border: 1px solid #fff;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  width: 34px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-top: 10px;
+  padding: 0px;
+  text-align: center;
+} /* padding 0px */
+
+.square:focus {
+  outline: none;
+}
+
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.sh {
+  height: 10px;
+  width: 162px;
+  background-color: green;
+  border-width: 10px;
+  /* border-color: red; */
+  margin-top: 10px;
+}
+
+.sh-lastRow {
+  margin-bottom: 10px;
+  border-color: red;
+  background-color: green;
+}
+
+.sv0 {
+  height: 55px;
+  width: 10px;
+  position: absolute;
+  margin-left: 48.5px;
+  background-color: green;
+  border-width: 10px;
+  border-color: red;
+}
+
+.sv1 {
+  height: 55px;
+  width: 10px;
+  position: absolute;
+  margin-left: 102.5px;
+  background-color: green;
+  border-width: 10px;
+  border-color: red;
+}
+
+/* .line {
+  width: 135px;
+  height: 10px;
+  background-color: rgba(89, 133, 91, 0.511);
+} */
