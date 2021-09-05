@@ -259,7 +259,7 @@ export default function Game(props) {
         >
           <div className="board">
             <Board
-              squares={history.history[stepNumber].squares}
+              grid={history.history[stepNumber].squares}
               winners={getWinners()}
               selItems={selItems}
               stepNumber={stepNumber}

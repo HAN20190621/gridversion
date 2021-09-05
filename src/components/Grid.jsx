@@ -1,4 +1,13 @@
-const Grid = ({ grid }) => {
+const Grid = ({
+  grid,
+  winners,
+  selItems,
+  stepNumber,
+  currPlayer,
+  jumpToInd,
+  onClick
+}) => {
+  let size = grid.length - 1;
   return (
     <div style={{ display: "inline-block" }}>
       <div
@@ -12,7 +21,11 @@ const Grid = ({ grid }) => {
       >
         {grid.map((row, rowIdx) =>
           row.map((cell, colIdx) => (
-            <Cell key={`${colIdx}-${rowIdx}`} cell={cell} />
+            <Cell
+              key={`${colIdx}-${rowIdx}`}
+              cell={cell}
+              dim={{ x: colIdx, y: rowIdx, size: size }}
+            />
           ))
         )}
       </div>
@@ -26,13 +39,17 @@ const cellStyle = {
   width: 75
 };
 
-function Cell({ cell }) {
+function Cell({ cell, dim }) {
   return (
     <div style={cellStyle}>
       <button
         type="button"
         style={{ height: "inherit", width: "inherit" }}
-        onClick={() => {}}
+        onClick={() => {
+          //(colIdx+rowIdx) + rowIdx*MAX(coldIdx)
+          let idx = dim.y + dim.x + dim.y * dim.size;
+          console.log(dim.x + " " + dim.y + " " + idx);
+        }}
       >
         {cell}
       </button>
@@ -41,13 +58,16 @@ function Cell({ cell }) {
 }
 
 function generateGrid(rows, columns, mapper) {
-  return Array(rows)
+  let arr = Array(rows)
     .fill()
     .map(() => Array(columns).fill().map(mapper));
+  console.log(arr.length);
+  return arr;
 }
 
 Grid.defaultProps = {
-  grid: generateGrid(3, 3, () => null)
+  grid: generateGrid(4, 4, () => null),
+  currPlayer: { colour: "Pink" }
 };
 
 export default Grid;
