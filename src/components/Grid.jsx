@@ -24,7 +24,7 @@ const Grid = ({
             <Cell
               key={`${colIdx}-${rowIdx}`}
               cell={cell}
-              dim={{ x: colIdx, y: rowIdx, size: size }}
+              range={{ x: colIdx, y: rowIdx, size: size }}
             />
           ))
         )}
@@ -39,16 +39,16 @@ const cellStyle = {
   width: 75
 };
 
-function Cell({ cell, dim }) {
+function Cell({ cell, range }) {
   return (
     <div style={cellStyle}>
       <button
         type="button"
-        style={{ height: "inherit", width: "inherit" }}
+        style={{ height: "inherit", width: "inherit", backgroundColor: "pink" }}
         onClick={() => {
           //(colIdx+rowIdx) + rowIdx*MAX(coldIdx)
-          let idx = dim.y + dim.x + dim.y * dim.size;
-          console.log(dim.x + " " + dim.y + " " + idx);
+          let idx = range.y + range.x + range.y * range.size;
+          console.log(range.x + " " + range.y + " " + idx);
         }}
       >
         {cell}
@@ -67,7 +67,7 @@ function generateGrid(rows, columns, mapper) {
 
 Grid.defaultProps = {
   grid: generateGrid(4, 4, () => null),
-  currPlayer: { colour: "Pink" }
+  currPlayer: { colour: "pink" }
 };
 
 export default Grid;
