@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import Square from './Square';
-import Line from './Line';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import Square from "./Square";
+import Line from "./Line";
 
 //  https://www.pluralsight.com/guides/applying-classes-conditionally-react
 const Board = ({
@@ -11,14 +11,14 @@ const Board = ({
   stepNumber,
   currPlayer,
   jumpToInd,
-  onClick,
+  onClick
 }) => {
   // button positions for vertical pos=[0,1,2] horizontal pos=[0,3,6]
   const [positions, setPositions] = useState({});
-  const winStyle = { color: currPlayer.colour, fontWeight: 'bold' };
+  const winStyle = { color: currPlayer.colour, fontWeight: "bold" };
   const normalStyle = {
-    color: 'black',
-    fontWeight: 'normal',
+    color: "black",
+    fontWeight: "normal"
   }; // , color:'black'
 
   // useEffect(() => {
@@ -45,7 +45,7 @@ const Board = ({
                 value={squares[idx_]}
                 idx={idx_}
                 className={
-                  'square' + ([6, 7, 8].includes(idx_) ? ' sh-lastRow' : '')
+                  "square" + ([6, 7, 8].includes(idx_) ? " sh-lastRow" : "")
                 }
                 onClick={() => {
                   onClick(idx_);
@@ -94,16 +94,16 @@ Board.propTypes = {
   stepNumber: PropTypes.number,
   currPlayer: PropTypes.object,
   jumpToInd: PropTypes.bool,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func
 };
 
 Board.defaultProps = {
-  currPlayer: { colour: 'red' },
+  currPlayer: { colour: "red" },
   squares: Array(9).fill(null),
   winners: [3, 4, 5],
   selItems: [0, 1, 2],
   jumpToInd: false,
-  onClick: () => {},
+  onClick: () => {}
 };
 
 export default Board;

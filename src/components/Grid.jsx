@@ -1,12 +1,4 @@
-const Grid = ({
-  grid,
-  winners,
-  selItems,
-  stepNumber,
-  currPlayer,
-  jumpToInd,
-  onClick
-}) => {
+const Grid = ({ grid, setCellStyle, setPositions, onClick }) => {
   let size = grid.length - 1;
   return (
     <div style={{ display: "inline-block" }}>
@@ -24,7 +16,9 @@ const Grid = ({
             <Cell
               key={`${colIdx}-${rowIdx}`}
               cell={cell}
+              setCellStyle={setCellStyle}
               range={{ x: colIdx, y: rowIdx, size: size }}
+              onClick={onClick}
             />
           ))
         )}
@@ -39,16 +33,26 @@ const cellStyle = {
   width: 75
 };
 
-function Cell({ cell, range }) {
+function Cell({ cell, setCellStyle, range, onClick }) {
+  let idx = range.y + range.x + range.y * range.size;
+
+  function setCellStyle_(range) {
+    //console.log(range.x + " " + range.y + " " + idx);
+    let style = setCellStyle(idx);
+    //console.log(style);
+    return { ...style, height: "inherit", width: "inherit" };
+  }
+
   return (
     <div style={cellStyle}>
       <button
         type="button"
-        style={{ height: "inherit", width: "inherit", backgroundColor: "pink" }}
+        style={setCellStyle_(range)}
         onClick={() => {
           //(colIdx+rowIdx) + rowIdx*MAX(coldIdx)
-          let idx = range.y + range.x + range.y * range.size;
-          console.log(range.x + " " + range.y + " " + idx);
+          //let idx = range.y + range.x + range.y * range.size;
+          //console.log(range.x + " " + range.y + " " + idx + cell);
+          onClick(range.x, range.y, idx);
         }}
       >
         {cell}
@@ -57,17 +61,17 @@ function Cell({ cell, range }) {
   );
 }
 
-function generateGrid(rows, columns, mapper) {
-  let arr = Array(rows)
-    .fill()
-    .map(() => Array(columns).fill().map(mapper));
-  console.log(arr.length);
-  return arr;
-}
+// function generateGrid(rows, columns, mapper) {
+//   let arr = Array(rows)
+//     .fill()
+//     .map(() => Array(columns).fill().map(mapper));
+//   console.log(arr.length);
+//   return arr;
+// }
 
-Grid.defaultProps = {
-  grid: generateGrid(4, 4, () => null),
-  currPlayer: { colour: "pink" }
-};
+// Grid.defaultProps = {
+//   grid: generateGrid(3, 3, () => null),
+//   currPlayer: { colour: "pink" }
+// };
 
 export default Grid;

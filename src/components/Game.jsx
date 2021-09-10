@@ -7,11 +7,19 @@ import gameReducer from "../reducers/gameReducer/gameReducer";
 import { initialiseGame } from "../reducers/gameReducer/constants";
 // import _ from "lodash"; // included in Create-React-App by default and imported as underscore
 
+function generateGrid(rows, columns, mapper) {
+  let arr = Array(rows)
+    .fill()
+    .map(() => Array(columns).fill().map(mapper));
+  return arr;
+}
+
 export default function Game(props) {
   const [history, setHistory] = useState({
     history: [
       {
-        squares: Array(9).fill(null)
+        //squares: Array(9).fill(null)
+        squares: generateGrid(3, 3, () => null)
       }
     ]
   });
@@ -41,7 +49,7 @@ export default function Game(props) {
   useEffect(() => {
     const tempHistory = history.history.slice(0, stepNumber + 1);
     const curr = tempHistory[tempHistory.length - 1];
-    const squares = curr.squares.slice(); // copy
+    const squares = curr.squares.slice(); // current grid
     //
     const lines = [
       [0, 1, 2],
@@ -69,7 +77,7 @@ export default function Game(props) {
     }
   }, [history, stepNumber]);
 
-  function handleClick(item) {
+  function handleClick(x, y, index) {
     const copyHistory = history.history.slice(0, stepNumber + 1); // advance
     const current = copyHistory[copyHistory.length - 1];
     const squares = current.squares.slice(); // copy
