@@ -1,4 +1,4 @@
-const LineType = {
+const LINE_TYPE = {
   HORIZONTAL: {
     H0: [0, 1, 2],
     H1: [3, 4, 5],
@@ -22,8 +22,8 @@ function getLineType(items) {
   const temp = items;
   //console.log(items);
   temp.sort();
-  for (const key1 in LineType) {
-    for (const [j, val2] of Object.entries(LineType[key1])) {
+  for (const key1 in LINE_TYPE) {
+    for (const [j, val2] of Object.entries(LINE_TYPE[key1])) {
       same =
         val2.length === temp.length &&
         val2.every(function (item, idx) {

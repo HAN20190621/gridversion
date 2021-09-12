@@ -7,22 +7,28 @@ import gameReducer from "../reducers/gameReducer/gameReducer";
 import { initialiseGame } from "../reducers/gameReducer/constants";
 // import _ from "lodash"; // included in Create-React-App by default and imported as underscore
 
-function generateGrid(rows, columns, mapper) {
-  let arr = Array(rows)
-    .fill()
-    .map(() => Array(columns).fill().map(mapper));
-  return arr;
-}
+const initialiseMoves = (moveTo, index) => {
+  const desc = "Go to game start";
+  return (
+    <li key={index}>
+      <button
+        onClick={() => {
+          moveTo(0);
+        }}
+      >
+        {desc}
+      </button>
+    </li>
+  );
+};
 
 export default function Game(props) {
-  const [history, setHistory] = useState({
-    history: [
-      {
-        //squares: Array(9).fill(null)
-        squares: generateGrid(3, 3, () => null)
-      }
-    ]
-  });
+  // const [history, setHistory] = useState([
+  //   {
+  //     //squares: Array(9).fill(null)
+  //     grid: generateGrid(3, 3, () => null)
+  //   }
+  // ]);
 
   const [game, dispatch] = useReducer(
     gameReducer,
@@ -32,9 +38,9 @@ export default function Game(props) {
   const [selItems, setSelItems] = useState([]);
   const [stepNumber, setStepNumber] = useState(0);
   const [isNext, setIsNext] = useState(true); // next player
-  const [moves, setMoves] = useState([]);
+  const [moves, setMoves] = useState([initialiseMoves(moveTo, 0)]);
   const [sortAsc, setSortAsc] = useState(true);
-  const [jumpToInd, setJumpToInd] = useState(false);
+  const [jumpToInd, setMoveToInd] = useState(false);
   const [status, setStatus] = useState(""); //game status
   // const [lineStyle, setLineStyle] = useState({});
   //const [target, setTarget] = useState(null);
@@ -45,97 +51,133 @@ export default function Game(props) {
   //   setBoardPos(ref?.getBoundingClientRect());
   // }, []);
 
-  // set winners
-  useEffect(() => {
-    const tempHistory = history.history.slice(0, stepNumber + 1);
-    const curr = tempHistory[tempHistory.length - 1];
-    const squares = curr.squares.slice(); // current grid
-    //
-    const lines = [
-      [0, 1, 2],
-      [0, 3, 6],
-      [0, 4, 8],
-      [1, 4, 7],
-      [2, 4, 6],
-      [2, 5, 8],
-      [3, 4, 5],
-      [6, 7, 8]
-    ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (
-        squares[a] &&
-        squares[a] === squares[b] &&
-        squares[a] === squares[c]
-      ) {
-        // get the last click item and calc the offset
-        dispatch({
-          type: "update winners",
-          payload: { xo: squares[a], winners: [a, b, c] }
-        });
-      }
-    }
-  }, [history, stepNumber]);
+  // // set winners
+  // useEffect(() => {
+  //   const tempHistory = history.slice(0, stepNumber + 1);
+  //   const curr = tempHistory[tempHistory.length - 1];
+  //   const grid = curr.gird.slice(); // current grid
+  //   //
+  //   const lines = [
+  //     [0, 1, 2],
+  //     [0, 3, 6],
+  //     [0, 4, 8],
+  //     [1, 4, 7],
+  //     [2, 4, 6],
+  //     [2, 5, 8],
+  //     [3, 4, 5],
+  //     [6, 7, 8]
+  //   ];
+  //   for (let i = 0; i < lines.length; i++) {
+  //     const [a, b, c] = lines[i];
+  //     if (
+  //       grid[a] === grid[b] &&
+  //       grid[a] === grid[c]
+  //       grid[a] &&
+  //     ) {
+  //       // get the last click item and calc the offset
+  //       dispatch({
+  //         type: "update winners",
+  //         payload: { xo: squares[a], winners: [a, b, c] }
+  //       });
+  //     }
+  //   }
+  // }, [history, stepNumber]);
 
   function handleClick(x, y, index) {
-    const copyHistory = history.history.slice(0, stepNumber + 1); // advance
-    const current = copyHistory[copyHistory.length - 1];
-    const squares = current.squares.slice(); // copy
-    //
-    if (game.winners.winners.length === 3 || squares[item]) return; // check if item exists // calculate winner????
-    //
-    squares[item] = isNext
-      ? game.firstPlayer === "X"
-        ? "X"
-        : "O"
-      : game.firstPlayer === "X"
-      ? "O"
-      : "X";
-    //console.log(squares);
-    setHistory((prev) => ({
-      ...prev,
-      history: copyHistory.concat([{ squares }])
-    }));
-    setSelItems(selItems.slice(0, stepNumber).concat(item));
-    setStepNumber(copyHistory.length);
-    setIsNext(!isNext);
-    // get current player
+    //console.log(game.history);
+    // set current player - next turn
+    // update history
     dispatch({
-      type: "update current player",
+      type: "click",
       payload: {
-        xo: squares[item]
+        x: x,
+        y: y,
+        index: index
       }
     });
-    if (jumpToInd) setJumpToInd(false);
-  }
 
-  const doSetMoves = useCallback(() => {
-    const newMoves = history.history.map((hist, move) => {
-      const row = [0, 1, 2].includes(selItems[move - 1])
-        ? "0"
-        : [3, 4, 5].includes(selItems[move - 1])
-        ? "1"
-        : [6, 7, 8].includes(selItems[move - 1])
-        ? "2"
-        : "";
-      const desc = move
-        ? `Go to move ${move} (${selItems[move - 1] % 3}, ${row})`
-        : "Go to game start";
+    // update moves - lagging???
+    const { history } = game;
+    const desc = `Go to move ${history.length} (${y}, ${x})`;
+    const newMove = (() => {
       return (
-        <li key={move}>
+        <li key={history.length}>
           <button
             onClick={() => {
-              setJumpToInd(true);
-              jumpTo(move);
+              //setMoveToInd(true);
+              moveTo(history.length);
             }}
           >
             {desc}
           </button>
         </li>
       );
+    })();
+    //
+    setMoves((prev) => {
+      return [...prev, newMove];
     });
-    setMoves(newMoves);
-  }, [history, selItems]);
+
+    // const copyHistory = history.history.slice(0, stepNumber + 1); // advance
+    // const current = copyHistory[copyHistory.length - 1];
+    // const squares = current.squares.slice(); // copy
+    // //
+    // if (game.winners.winners.length === 3 || squares[item]) return; // check if item exists // calculate winner????
+    // //
+    // squares[item] = isNext
+    //   ? game.firstPlayer === "X"
+    //     ? "X"
+    //     : "O"
+    //   : game.firstPlayer === "X"
+    //   ? "O"
+    //   : "X";
+    // //console.log(squares);
+    // setHistory((prev) => ({
+    //   ...prev,
+    //   history: copyHistory.concat([{ squares }])
+    // }));
+    // setSelItems(selItems.slice(0, stepNumber).concat(item));
+    // setStepNumber(copyHistory.length);
+    // setIsNext(!isNext);
+    // // get current player
+    // dispatch({
+    //   type: "update current player",
+    //   payload: {
+    //     xo: squares[item]
+    //   }
+    // });
+    // if (jumpToInd) setMoveToInd(false);
+  }
+
+  // const doSetMoves = useCallback(() => {
+  //   const { history } = game;
+  //   const { x, y, index } = history[history.length - 1];
+
+  //   const desc =
+  //     index === -1
+  //       ? "Go to game start"
+  //       : `Go to move ${history.length - 1} (${y}, ${x})`;
+
+  //   const newMoves = (() => {
+  //     return (
+  //       <li key={index}>
+  //         <button
+  //           onClick={() => {
+  //             //setMoveToInd(true);
+  //             moveTo(history.length - 1);
+  //           }}
+  //         >
+  //           {desc}
+  //         </button>
+  //       </li>
+  //     );
+  //   })();
+  //   //
+  //   //console.log(newMoves);
+  //   setMoves((prev) => {
+  //     const newMoves = prev.length === 0;
+  //   });
+  // }, [game]);
 
   //reset current winners
   useEffect(() => {
@@ -181,13 +223,17 @@ export default function Game(props) {
     setStatus(tempStatus);
   }, [game, history, stepNumber, isNext]);
 
-  useEffect(() => {
-    // get player moves
-    doSetMoves();
-    // winner, score and game status
-    doSetGameStatus();
-    //
-  }, [doSetMoves, doSetGameStatus]); // history.history[stepNumber].squares );
+  // useEffect(() => {
+  //   doSetMoves();
+  // }, [doSetMoves]); // history.history[stepNumber].squares );
+
+  // useEffect(() => {
+  //   // get player moves
+  //   doSetMoves();
+  //   // winner, score and game status
+  //   doSetGameStatus();
+  //   //
+  // }, [doSetMoves, doSetGameStatus]); // history.history[stepNumber].squares );
 
   // set the width and height of the board-container
   // useEffect(() => {
@@ -207,15 +253,25 @@ export default function Game(props) {
     setSelItems([]);
     setStepNumber(0);
     setIsNext(true);
-    setMoves([]);
+    //setMoves([]);
     setSortAsc(true);
     // reset game - players
     dispatch({ type: "request to start" });
   }
 
-  function jumpTo(step) {
-    setStepNumber(step);
-    setIsNext(step % 2 === 0);
+  // jump to the selected position
+  function moveTo(moveIndex) {
+    dispatch({
+      type: "move to",
+      payload: {
+        moveIndex: moveIndex
+      }
+    });
+
+    setMoves((prev) => {
+      const newMoves = prev.slice(0, moveIndex + 1);
+      return newMoves;
+    });
   }
 
   function handleSort(sortOrder) {
@@ -223,24 +279,32 @@ export default function Game(props) {
   }
 
   function getScore() {
-    const { players } = game;
-    let temp = "";
-    players.forEach((item) => {
-      temp += `${item.name}-${item.score.toString()} `;
-      //console.log(item.score);
-    });
-    return temp;
+    //console.log(game);
+    //const { players } = game;
+    //let temp = "";
+    //players.forEach((item) => {
+    //  temp += `${item.name}-${item.score.toString()} `;
+    //  //console.log(item.score);
+    //});
+    //return temp;
   }
 
   function getWinners() {
     const { winners } = game;
-    console.log(winners.winners);
+    //console.log(winners.winners);
     return winners.winners;
   }
 
   function getCurrentPlayer() {
     const { currentPlayer } = game;
     return currentPlayer;
+  }
+
+  function getGrid() {
+    const { history } = game;
+    //console.log("getGrid");
+    //console.log(history.length);
+    return history[history.length - 1].grid;
   }
 
   return (
@@ -267,32 +331,25 @@ export default function Game(props) {
         >
           <div className="board">
             <Board
-              grid={history.history[stepNumber].squares}
+              grid={getGrid()}
               winners={getWinners()}
               selItems={selItems}
               stepNumber={stepNumber}
               currPlayer={getCurrentPlayer()}
-              onClick={handleClick}
+              handleClick={handleClick}
               jumpToInd={jumpToInd} // indicate user to move to previous move
             />
+            <div className="game-info">
+              <ToggleButton
+                toggle={handleSort}
+                labels={["Desc", "Asc"]}
+                changeOpacity={false}
+              />
+              <ol reversed={!sortAsc}>
+                {sortAsc ? moves.slice().sort() : moves.slice().reverse()}
+              </ol>
+            </div>
           </div>
-          <div
-            className="board stack-top"
-            // style={{
-            //   width: boardPos.width + 'px',
-            //   height: boardPos.height + 'px',
-            // }}
-          />
-        </div>
-        <div className="game-info">
-          <ToggleButton
-            toggle={handleSort}
-            labels={["Desc", "Asc"]}
-            changeOpacity={false}
-          />
-          <ol reversed={!sortAsc}>
-            {sortAsc ? moves.slice().sort() : moves.slice().reverse()}
-          </ol>
         </div>
       </>
     </div>
