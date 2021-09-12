@@ -8,6 +8,43 @@ const clone = (x) => JSON.parse(JSON.stringify(x));
 //   turn: "X"
 // };
 
+// Depending on your JavaScript environment, you can potentially
+// use Array.prototype.flat to do this
+const flatten = (array) => array.reduce((acc, cur) => [...acc, ...cur], []);
+
+const checkThree = (a, b, c) => {
+  // If any of the values are null, return false
+  if (!a || !b || !c) return false;
+  return a === b && b === c;
+};
+
+function checkForWin(flatGrid) {
+  // Because our grid is flat, we can use array destructuring to
+  // define variables for each square, I will use the points on a
+  // compass as my variable names
+  const [nw, n, ne, w, c, e, sw, s, se] = flatGrid;
+
+  // Then we simply run `checkThree` on each row, column and diagonal
+  // If it's true for any of them, the game has been won!
+  return (
+    checkThree(nw, n, ne) ||
+    checkThree(w, c, e) ||
+    checkThree(sw, s, se) ||
+    checkThree(nw, w, sw) ||
+    checkThree(n, c, s) ||
+    checkThree(ne, e, se) ||
+    checkThree(nw, c, se) ||
+    checkThree(ne, c, sw)
+  );
+}
+
+// function checkForDraw(flatGrid) {
+//   return (
+//     !checkForWin(flatGrid) &&
+//     flatGrid.filter(Boolean).length === flatGrid.length
+//   );
+// }
+
 // game reducer
 // score is incrementing by 2 instead of 1
 //The reason that your quantity is being incremented twice is
@@ -62,6 +99,17 @@ export default function gameReducer(state, action) {
         }
       ];
       nextState.history = newHistory;
+
+      const flatGrid = flatten(grid);
+
+      if (checkForWin(flatGrid)) {
+        nextState.status = "success";
+        return nextState;
+      }
+
+      // if (checkForDraw(flatGrid)) {
+      //   return getInitialState();
+      // }
 
       // Now that we've used this turn, we need to set the next turn. It might
       // be overkill, but I've used an object enum to do this.
