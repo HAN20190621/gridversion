@@ -1,5 +1,5 @@
 const Grid = ({ grid, setCellStyle, setPositions, onClick }) => {
-  let size = grid.length - 1;
+  let end = grid.length - 1;
   return (
     <div style={{ display: "inline-block" }}>
       <div
@@ -17,7 +17,7 @@ const Grid = ({ grid, setCellStyle, setPositions, onClick }) => {
               key={`${colIdx}-${rowIdx}`}
               cell={cell}
               setCellStyle={setCellStyle}
-              range={{ x: colIdx, y: rowIdx, size: size }}
+              range={{ x: colIdx, y: rowIdx, end: end }}
               onClick={onClick}
             />
           ))
@@ -34,7 +34,7 @@ const cellStyle = {
 };
 
 function Cell({ cell, setCellStyle, range, onClick }) {
-  let idx = range.y + range.x + range.y * range.size;
+  let idx = range.y + range.x + range.y * range.end;
 
   function setCellStyle_(range) {
     //console.log(range.x + " " + range.y + " " + idx);
@@ -50,8 +50,7 @@ function Cell({ cell, setCellStyle, range, onClick }) {
         style={setCellStyle_(range)}
         onClick={() => {
           //(colIdx+rowIdx) + rowIdx*MAX(coldIdx)
-          //let idx = range.y + range.x + range.y * range.size;
-          //console.log(range.x + " " + range.y + " " + idx + cell);
+          console.log(range.x + " " + range.y + " " + idx + " " + range.end);
           onClick(range.x, range.y, idx);
         }}
       >

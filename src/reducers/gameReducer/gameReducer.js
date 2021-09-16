@@ -3,47 +3,113 @@ import { NEXT_TURN } from "../gameReducer/constants";
 // Simple way to deeply clone an array or object
 const clone = (x) => JSON.parse(JSON.stringify(x));
 
-// const initialState = {
-//   grid: newTicTacToeGrid(),
-//   turn: "X"
-// };
+// function generateGrid(rows, columns, mapper) {
+//   return Array(rows).fill().map(() => {
+//       return Array(columns).fill().map(mapper);
+//   })
+// }
 
-// Depending on your JavaScript environment, you can potentially
-// use Array.prototype.flat to do this
-const flatten = (array) => array.reduce((acc, cur) => [...acc, ...cur], []);
+// const grid = (() => generateGrid(4, 4, () => null))();
 
-const checkThree = (a, b, c) => {
-  // If any of the values are null, return false
-  if (!a || !b || !c) return false;
-  return a === b && b === c;
-};
+// /* grid[0][0] = 'X'
+// grid[0][1] = 'X'
+// grid[0][2] = 'X'
+// grid[0][3] = 'X'
+// */
 
-function checkForWin(flatGrid) {
-  // Because our grid is flat, we can use array destructuring to
-  // define variables for each square, I will use the points on a
-  // compass as my variable names
-  const [nw, n, ne, w, c, e, sw, s, se] = flatGrid;
+// grid[0][2] ='X';
+// grid[1][2] ='X';
+// grid[2][2] ='X';
+// grid[3][2] ='X';
 
-  // Then we simply run `checkThree` on each row, column and diagonal
-  // If it's true for any of them, the game has been won!
-  return (
-    checkThree(nw, n, ne) ||
-    checkThree(w, c, e) ||
-    checkThree(sw, s, se) ||
-    checkThree(nw, w, sw) ||
-    checkThree(n, c, s) ||
-    checkThree(ne, e, se) ||
-    checkThree(nw, c, se) ||
-    checkThree(ne, c, sw)
-  );
+// //console.log(grid.length);
+
+// /* let h=[];
+// for(let i=0; i < grid.length; i++)
+// {
+// const x = grid[i].every((val, j, arr)=>
+// val && arr[0] && h.push(val));
+// if (x && h.length === grid.length) {
+//   break;
+// }
+// } */
+
+// let v=[];
+// for(let i=0; i < grid.length; i++) {
+//   v=[];
+//   for(let j=0; j < grid.length; j++) {
+//   v.push(grid[j][i])
+// }
+// const x = v.every((val, j, arr)=> val && arr[0])
+// if (x && v.length === grid.length) {
+//   console.log(v);
+//   break;
+// }
+// }
+
+function horizontal(grid) {
+  let h = {}; //y >row x-> col
+  let temp = [];
+  for (let y = 0; y < grid.length; y++) {
+    const check = grid[y].every(
+      (val, index, arr) => val && arr[0] && temp.push(val)
+      //h.push({ y: y, x: x, index: y * (grid.length - 1) })
+    );
+    if (check && temp.length === grid.length) {
+      h = { type: "H", index: y };
+      break;
+    }
+  }
+  return h;
 }
 
-// function checkForDraw(flatGrid) {
-//   return (
-//     !checkForWin(flatGrid) &&
-//     flatGrid.filter(Boolean).length === flatGrid.length
-//   );
-// }
+function vertical(grid) {
+  //y - row x - col
+  let v = {};
+  let temp = [];
+  // iterate vertically
+  for (let y = 0; y < grid.length; y++) {
+    temp = [];
+    for (let x = 0; x < grid.length; x++) {
+      temp.push(grid[x][y]);
+    }
+    console.log(temp);
+    const check = temp.every((val, index, arr) => val && arr[0]);
+    if (check && temp.length === grid.length) {
+      v = { type: "V", index: y };
+      break;
+    }
+  }
+  return v;
+}
+
+function diagonal(grid) {
+  let check = false;
+  let temp1 = [];
+  let temp2 = [];
+
+  for (let i = 0, j = grid.length - 1; i <= grid.length - 1; i++) {
+    temp1.push(grid[i][i]);
+    temp2.push(grid[i][j--]);
+  }
+  // diagonal 1
+  check = temp1.every((val, index, arr) => val && arr[0]);
+  if (check && temp1.length === grid.length) {
+    return { type: "D", index: 0 };
+  }
+  // diagonal 2
+  check = temp2.every((val, index, arr) => val && arr[0]);
+  if (check && temp2.length === grid.length) {
+    return { type: "D", index: 1 };
+  }
+  return null;
+}
+
+function checkForWin(grid) {
+  //console.log(horizontal(grid));
+  //console.log(vertical(grid));
+  console.log(diagonal(grid));
+}
 
 // game reducer
 // score is incrementing by 2 instead of 1
@@ -100,12 +166,11 @@ export default function gameReducer(state, action) {
       ];
       nextState.history = newHistory;
 
-      const flatGrid = flatten(grid);
-
-      if (checkForWin(flatGrid)) {
-        nextState.status = "success";
-        return nextState;
-      }
+      checkForWin(grid);
+      //if (checkForWin(grid)) {
+      //  nextState.status = "success";
+      //  return nextState;
+      //}
 
       // if (checkForDraw(flatGrid)) {
       //   return getInitialState();

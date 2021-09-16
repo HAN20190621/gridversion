@@ -23,7 +23,7 @@ function generateGrid(rows, columns, mapper) {
   return arr;
 }
 
-const newTicTacToeGrid = generateGrid(3, 3, () => {
+const newTicTacToeGrid = generateGrid(4, 4, () => {
   return null;
 });
 
@@ -33,7 +33,7 @@ export const initialiseGame = (players) => {
     turn
   );
   const currentPlayer = players[tempIdx];
-  //const winners = initialiseWinners();
+  const winners = initialiseWinners();
   let history = [
     {
       x: -1,
@@ -41,8 +41,8 @@ export const initialiseGame = (players) => {
       index: -1,
       grid: newTicTacToeGrid,
       turn: turn,
-      player: currentPlayer
-      //winners: winners // winning marks
+      player: currentPlayer,
+      winners: winners // winning marks
     }
   ];
 
@@ -50,7 +50,7 @@ export const initialiseGame = (players) => {
     history: history,
     players: players,
     turn: turn,
-    player: currentPlayer
-    //winners: winners
+    player: currentPlayer,
+    winners: winners
   };
 };
