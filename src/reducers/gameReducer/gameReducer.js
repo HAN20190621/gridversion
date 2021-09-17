@@ -3,112 +3,110 @@ import { NEXT_TURN } from "../gameReducer/constants";
 // Simple way to deeply clone an array or object
 const clone = (x) => JSON.parse(JSON.stringify(x));
 
-// function generateGrid(rows, columns, mapper) {
-//   return Array(rows).fill().map(() => {
-//       return Array(columns).fill().map(mapper);
-//   })
+// function horizontal(grid) {
+//   let temp = [];
+//   for (let y = 0; y < grid.length; y++) {
+//     const check = grid[y].every(
+//       (val, index, arr) => val && arr[0] && temp.push(val)
+//       //h.push({ y: y, x: x, index: y * (grid.length - 1) })
+//     );
+//     if (check && temp.length === grid.length) {
+//       return { type: "H", index: y };
+//     }
+//   }
+//   return false;
 // }
 
-// const grid = (() => generateGrid(4, 4, () => null))();
-
-// /* grid[0][0] = 'X'
-// grid[0][1] = 'X'
-// grid[0][2] = 'X'
-// grid[0][3] = 'X'
-// */
-
-// grid[0][2] ='X';
-// grid[1][2] ='X';
-// grid[2][2] ='X';
-// grid[3][2] ='X';
-
-// //console.log(grid.length);
-
-// /* let h=[];
-// for(let i=0; i < grid.length; i++)
-// {
-// const x = grid[i].every((val, j, arr)=>
-// val && arr[0] && h.push(val));
-// if (x && h.length === grid.length) {
-//   break;
-// }
-// } */
-
-// let v=[];
-// for(let i=0; i < grid.length; i++) {
-//   v=[];
-//   for(let j=0; j < grid.length; j++) {
-//   v.push(grid[j][i])
-// }
-// const x = v.every((val, j, arr)=> val && arr[0])
-// if (x && v.length === grid.length) {
-//   console.log(v);
-//   break;
-// }
+// function vertical(grid) {
+//   //y - row x - col
+//   let temp = [];
+//   // iterate vertically
+//   for (let y = 0; y < grid.length; y++) {
+//     temp = [];
+//     for (let x = 0; x < grid.length; x++) {
+//       temp.push(grid[x][y]);
+//     }
+//     const check = temp.every((val, index, arr) => val && arr[0]);
+//     if (check && temp.length === grid.length) {
+//       return { type: "V", index: y };
+//     }
+//   }
+//   return false;
 // }
 
-function horizontal(grid) {
-  let h = {}; //y >row x-> col
-  let temp = [];
-  for (let y = 0; y < grid.length; y++) {
-    const check = grid[y].every(
-      (val, index, arr) => val && arr[0] && temp.push(val)
-      //h.push({ y: y, x: x, index: y * (grid.length - 1) })
-    );
-    if (check && temp.length === grid.length) {
-      h = { type: "H", index: y };
-      break;
-    }
-  }
-  return h;
-}
+// function diagonal(grid) {
+//   let temp1 = [];
+//   let temp2 = [];
 
-function vertical(grid) {
-  //y - row x - col
-  let v = {};
-  let temp = [];
-  // iterate vertically
-  for (let y = 0; y < grid.length; y++) {
-    temp = [];
-    for (let x = 0; x < grid.length; x++) {
-      temp.push(grid[x][y]);
-    }
-    console.log(temp);
-    const check = temp.every((val, index, arr) => val && arr[0]);
-    if (check && temp.length === grid.length) {
-      v = { type: "V", index: y };
-      break;
-    }
-  }
-  return v;
-}
-
-function diagonal(grid) {
-  let check = false;
-  let temp1 = [];
-  let temp2 = [];
-
-  for (let i = 0, j = grid.length - 1; i <= grid.length - 1; i++) {
-    temp1.push(grid[i][i]);
-    temp2.push(grid[i][j--]);
-  }
-  // diagonal 1
-  check = temp1.every((val, index, arr) => val && arr[0]);
-  if (check && temp1.length === grid.length) {
-    return { type: "D", index: 0 };
-  }
-  // diagonal 2
-  check = temp2.every((val, index, arr) => val && arr[0]);
-  if (check && temp2.length === grid.length) {
-    return { type: "D", index: 1 };
-  }
-  return null;
-}
+//   for (let i = 0, j = grid.length - 1; i <= grid.length - 1; i++) {
+//     temp1.push(grid[i][i]);
+//     temp2.push(grid[i][j--]);
+//   }
+//   // diagonal 1
+//   let check = temp1.every((val, index, arr) => val && arr[0]);
+//   if (check && temp1.length === grid.length) {
+//     return { type: "D", index: 0 };
+//   }
+//   // diagonal 2
+//   check = temp2.every((val, index, arr) => val && arr[0]);
+//   if (check && temp2.length === grid.length) {
+//     return { type: "D", index: 1 };
+//   }
+//   return null;
+// }
 
 function checkForWin(grid) {
-  //console.log(horizontal(grid));
-  //console.log(vertical(grid));
-  console.log(diagonal(grid));
+  //let winner = {};
+  let check;
+  let v = [];
+  let d1 = [];
+  let d2 = [];
+
+  for (let i = 0, j = grid.length - 1; i <= grid.length - 1; i++, j--) {
+    grid[i][i] && d1.push(grid[i][i]); // diagonal 1
+    grid[j][i] && d2.push(grid[j][i]); // diagonal 2
+    // horizontal
+    check = grid[i].every((val, index, arr) => val && val === arr[0]);
+    if (check && grid[i].length === grid.length) {
+      return { type: "H", index: i };
+    }
+    // vertical
+    v = grid
+      .map((item, index) => {
+        return item[i];
+      })
+      .filter((item, index) => {
+        return item;
+      });
+
+    if (v.length === grid.length) {
+      check = v.every((item, index, arr) => {
+        return item && item === arr[0];
+      });
+      //
+      if (check && v.length === grid.length) {
+        return { type: "V", index: i };
+      }
+    }
+    // diagonal
+    check = d1.every((item, index, arr) => item && item === arr[0]);
+    if (check && d1.length === grid.length) {
+      return { type: "D", index: 0 };
+    }
+    // diagonal 2
+    check = d2.every((item, index, arr) => item && item === arr[0]);
+    if (check && d2.length === grid.length) {
+      return { type: "D", index: 1 };
+    }
+  }
+
+  check =
+    grid.flat().filter((item) => {
+      return item;
+    }).length ===
+    grid.length * grid.length;
+
+  //console.log(check);
 }
 
 // game reducer

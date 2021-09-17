@@ -50,7 +50,7 @@ function Cell({ cell, setCellStyle, range, onClick }) {
         style={setCellStyle_(range)}
         onClick={() => {
           //(colIdx+rowIdx) + rowIdx*MAX(coldIdx)
-          console.log(range.x + " " + range.y + " " + idx + " " + range.end);
+          //console.log(range.x + " " + range.y + " " + idx + " " + range.end);
           onClick(range.x, range.y, idx);
         }}
       >
