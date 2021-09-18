@@ -99,13 +99,12 @@ function checkForWin(grid) {
       return { type: "D", index: 1 };
     }
   }
-
+  // draw
   check =
     grid.flat().filter((item) => {
       return item;
     }).length ===
     grid.length * grid.length;
-
   //console.log(check);
 }
 
