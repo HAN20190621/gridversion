@@ -39,7 +39,7 @@ function generateGrid(rows, columns, mapper) {
   return arr;
 }
 
-const newTicTacToeGrid = generateGrid(4, 4, () => {
+const newTicTacToeGrid = generateGrid(3, 3, () => {
   return null;
 });
 

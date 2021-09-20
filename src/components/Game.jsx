@@ -5,83 +5,18 @@ import ToggleButton from "./ToggleButton";
 import Button from "./Button";
 import gameReducer from "../reducers/gameReducer/gameReducer";
 import { initialiseGame } from "../reducers/gameReducer/constants";
+
 // import _ from "lodash"; // included in Create-React-App by default and imported as underscore
 
-// const initialiseMoves = (moveTo, index) => {
-//   const desc = "Go to game start";
-//   return (
-//     <li key={index}>
-//       <button
-//         onClick={() => {
-//           moveTo(0);
-//         }}
-//       >
-//         {desc}
-//       </button>
-//     </li>
-//   );
-// };
-
 export default function Game(props) {
-  // const [history, setHistory] = useState([
-  //   {
-  //     //squares: Array(9).fill(null)
-  //     grid: generateGrid(3, 3, () => null)
-  //   }
-  // ]);
-
   const [game, dispatch] = useReducer(
     gameReducer,
     initialiseGame(props.players, moveTo)
   );
 
-  const [selItems, setSelItems] = useState([]);
-  const [stepNumber, setStepNumber] = useState(0);
-  const [isNext, setIsNext] = useState(true); // next player
-  // const [moves, setMoves] = useState([initialiseMoves(moveTo, 0)]);
   const [sortAsc, setSortAsc] = useState(true);
-  const [jumpToInd, setMoveToInd] = useState(false);
   const [status, setStatus] = useState(""); //game status
-  // const [lineStyle, setLineStyle] = useState({});
-  //const [target, setTarget] = useState(null);
-  // const [boardPos, setBoardPos] = useState({});
-
-  // const boardRef = useCallback((ref) => {
-  //   //console.log(ref.getBoundingClientRect());
-  //   setBoardPos(ref?.getBoundingClientRect());
-  // }, []);
-
-  // // set winners
-  // useEffect(() => {
-  //   const tempHistory = history.slice(0, stepNumber + 1);
-  //   const curr = tempHistory[tempHistory.length - 1];
-  //   const grid = curr.gird.slice(); // current grid
-  //   //
-  //   const lines = [
-  //     [0, 1, 2],
-  //     [0, 3, 6],
-  //     [0, 4, 8],
-  //     [1, 4, 7],
-  //     [2, 4, 6],
-  //     [2, 5, 8],
-  //     [3, 4, 5],
-  //     [6, 7, 8]
-  //   ];
-  //   for (let i = 0; i < lines.length; i++) {
-  //     const [a, b, c] = lines[i];
-  //     if (
-  //       grid[a] === grid[b] &&
-  //       grid[a] === grid[c]
-  //       grid[a] &&
-  //     ) {
-  //       // get the last click item and calc the offset
-  //       dispatch({
-  //         type: "update winners",
-  //         payload: { xo: squares[a], winners: [a, b, c] }
-  //       });
-  //     }
-  //   }
-  // }, [history, stepNumber]);
+  const [jumpToInd, setJumpToInd] = useState(false);
 
   function setMoveTo(x, y, length) {
     const desc = `Go to move ${length} (${y}, ${x})`;
@@ -90,7 +25,6 @@ export default function Game(props) {
         <li key={`${y}-${x}`}>
           <button
             onClick={() => {
-              //setMoveToInd(true);
               moveTo(length);
             }}
           >
@@ -101,6 +35,7 @@ export default function Game(props) {
     };
   }
 
+  // on click - record the move
   function handleClick(x, y, index) {
     //console.log(game.history);
     // set current player - next turn
@@ -115,167 +50,53 @@ export default function Game(props) {
       }
     });
 
-    // update moves - lagging???
-    // const { history } = game;
-    // const desc = `Go to move ${history.length} (${y}, ${x})`;
-    // const newMove = (() => {
-    //   return (
-    //     <li key={`${y}-${x}`}>
-    //       <button
-    //         onClick={() => {
-    //           //setMoveToInd(true);
-    //           moveTo(history.length);
-    //         }}
-    //       >
-    //         {desc}
-    //       </button>
-    //     </li>
-    //   );
-    // })();
-    //
-    // setMoves((prev) => {
-    //   return [...prev, newMove];
-    // });
-
-    // const copyHistory = history.history.slice(0, stepNumber + 1); // advance
-    // const current = copyHistory[copyHistory.length - 1];
-    // const squares = current.squares.slice(); // copy
-    // //
-    // if (game.winners.winners.length === 3 || squares[item]) return; // check if item exists // calculate winner????
-    // //
-    // squares[item] = isNext
-    //   ? game.firstPlayer === "X"
-    //     ? "X"
-    //     : "O"
-    //   : game.firstPlayer === "X"
-    //   ? "O"
-    //   : "X";
-    // //console.log(squares);
-    // setHistory((prev) => ({
-    //   ...prev,
-    //   history: copyHistory.concat([{ squares }])
-    // }));
-    // setSelItems(selItems.slice(0, stepNumber).concat(item));
-    // setStepNumber(copyHistory.length);
-    // setIsNext(!isNext);
-    // // get current player
-    // dispatch({
-    //   type: "update current player",
-    //   payload: {
-    //     xo: squares[item]
-    //   }
-    // });
-    // if (jumpToInd) setMoveToInd(false);
+    setJumpToInd(false);
   }
 
-  // const doSetMoves = useCallback(() => {
-  //   const { history } = game;
-  //   const { x, y, index } = history[history.length - 1];
-
-  //   const desc =
-  //     index === -1
-  //       ? "Go to game start"
-  //       : `Go to move ${history.length - 1} (${y}, ${x})`;
-
-  //   const newMoves = (() => {
-  //     return (
-  //       <li key={index}>
-  //         <button
-  //           onClick={() => {
-  //             //setMoveToInd(true);
-  //             moveTo(history.length - 1);
-  //           }}
-  //         >
-  //           {desc}
-  //         </button>
-  //       </li>
-  //     );
-  //   })();
-  //   //
-  //   //console.log(newMoves);
-  //   setMoves((prev) => {
-  //     const newMoves = prev.length === 0;
-  //   });
-  // }, [game]);
-
   //reset current winners
-  useEffect(() => {
-    if (jumpToInd) {
-      if (selItems.length !== stepNumber) {
-        dispatch({
-          type: "reset winners",
-          payload: { jumpToInd: jumpToInd }
-        });
-      }
-    }
-  }, [jumpToInd, stepNumber, selItems]);
-
+  //if score has been incremented and then move to was clicked
+  // then re-adjust score/winners
   const doSetGameStatus = useCallback(() => {
-    const { players, currentPlayer, firstPlayer, winners } = game;
-    let { xo } = currentPlayer;
-    const currentGame = history.history[stepNumber];
+    const { history, players, player, winners, turn } = game;
+    const currentGame = history[history.length - 1];
+    const { grid } = currentGame;
     const tempIdx = ((xo) => players.findIndex((player) => player.xo === xo))(
-      xo
+      turn
     );
-    const player = players[tempIdx];
-    let tempStatus;
-    if (winners.winners && winners.winners.length > 0) {
+    let tempStatus = "";
+    if (winners.length > 0) {
       tempStatus = `Winner: ${player.xo}${player.name !== "" ? "-" : ""}${
         player.name
       }`;
     } else if (
-      currentGame.squares.filter((item) => item == null).length === 0
+      grid.flat().filter((item) => item !== "").length ===
+      Math.pow(grid.length, 2) - 1
     ) {
       tempStatus = "No winner - draw!";
     } else {
-      xo = isNext
-        ? firstPlayer === "X"
-          ? "X"
-          : "O"
-        : firstPlayer === "X"
-        ? "O"
-        : "X";
-      tempStatus = `Next player: ${xo}${player.name !== "" ? "-" : ""}${
-        player.name
-      }`;
+      tempStatus = `Next player: ${turn}${
+        players[tempIdx].name !== "" ? "-" : ""
+      }${players[tempIdx].name}`;
     }
     setStatus(tempStatus);
-  }, [game, history, stepNumber, isNext]);
+  }, [game]);
 
-  // useEffect(() => {
-  //   doSetMoves();
-  // }, [doSetMoves]); // history.history[stepNumber].squares );
-
-  // useEffect(() => {
-  //   // get player moves
-  //   doSetMoves();
-  //   // winner, score and game status
-  //   doSetGameStatus();
-  //   //
-  // }, [doSetMoves, doSetGameStatus]); // history.history[stepNumber].squares );
-
-  // set the width and height of the board-container
-  // useEffect(() => {
-  //   if (boardRef === null) return;
-  //   const pos = boardRef.current.getBoundingClientRect();
-  //   setBoardDim({ width: pos.width, height: pos.height });
-  // }, [boardRef]);
+  useEffect(() => {
+    // winner, score and game status
+    doSetGameStatus();
+    //
+  }, [doSetGameStatus]);
 
   function handleRestart() {
-    setHistory({
-      history: [
-        {
-          squares: Array(9).fill(null)
-        }
-      ]
-    });
-    setSelItems([]);
-    setStepNumber(0);
-    setIsNext(true);
-    //setMoves([]);
-    setSortAsc(true);
+    const { players } = game;
     // reset game - players
-    dispatch({ type: "request to start" });
+    dispatch({
+      type: "request to start",
+      payload: {
+        players: players,
+        moveTo: moveTo
+      }
+    });
   }
 
   // jump to the selected position
@@ -286,11 +107,9 @@ export default function Game(props) {
         moveIndex: moveIndex
       }
     });
-
-    // setMoves((prev) => {
-    //   const newMoves = prev.slice(0, moveIndex + 1);
-    //   return newMoves;
-    // });
+    if (moveIndex === game.moves.length - 1) return;
+    // jump back to a step
+    setJumpToInd(true);
   }
 
   function handleSort(sortOrder) {
@@ -298,19 +117,17 @@ export default function Game(props) {
   }
 
   function getScore() {
-    //console.log(game);
-    //const { players } = game;
-    //let temp = "";
-    //players.forEach((item) => {
-    //  temp += `${item.name}-${item.score.toString()} `;
-    //  //console.log(item.score);
-    //});
-    //return temp;
+    const { players } = game;
+    let temp = "";
+    players.forEach((item) => {
+      // console.log(item);
+      temp += `${item.name}-${item.score.toString()} `;
+    });
+    return temp;
   }
 
   function getWinners() {
     const { winners } = game;
-    //console.log(winners);
     return winners;
   }
 
@@ -321,8 +138,13 @@ export default function Game(props) {
 
   function getSelIndex() {
     const { selIndex } = game;
-    //console.log(selIndex);
     return selIndex;
+  }
+
+  function getStepNumber() {
+    const { moves } = game;
+    // remove the game start
+    return moves.length - 1;
   }
 
   function getCurrentPlayer() {
@@ -332,8 +154,6 @@ export default function Game(props) {
 
   function getGrid() {
     const { history } = game;
-    //console.log("getGrid");
-    //console.log(history.length);
     return history[history.length - 1].grid;
   }
 
@@ -349,9 +169,8 @@ export default function Game(props) {
           }}
         />
         <div>{status}</div>
-        <div>({getScore()})</div>
-        <div>stepNumber = {stepNumber}</div>
-        {/* <div ref={handleLineStyleRef} className="board"> */}
+        <div>Step number: {getStepNumber()}</div>
+        <div>Score: {getScore()}</div>
         <div
           className="board-container"
           // style={{
@@ -366,9 +185,7 @@ export default function Game(props) {
               player={getCurrentPlayer()}
               handleClick={handleClick}
               selIndex={getSelIndex()}
-              // selItems={selItems}
-              // stepNumber={stepNumber}
-              // jumpToInd={jumpToInd} // indicate user to move to previous move
+              jumpToInd={jumpToInd}
             />
             <div className="game-info">
               <ToggleButton
@@ -393,17 +210,17 @@ const initialisePlayers = () => {
   const players = [
     {
       rank: 1,
-      name: "",
-      colour: "",
-      xo: "",
+      name: "Hannah",
+      colour: "pink",
+      xo: "X",
       status: "",
       score: 0
     },
     {
       rank: 2,
-      name: "",
-      colour: "",
-      xo: "",
+      name: "PeterPan",
+      colour: "yellow",
+      xo: "O",
       status: "",
       score: 0
     }

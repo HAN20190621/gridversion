@@ -8,10 +8,6 @@ const initialiseState = { style: NONE };
 export default function Line({ winners, positions, grid }) {
   const [line, dispatch] = useReducer(lineReducer, initialiseState);
 
-  //console.log("positions=", positions);
-  // const x = ["00", "01", "02", "01"];
-  // console.log(x.sort()[0]); // 1
-
   const setLine = useCallback(() => {
     dispatch({
       type: "recalculate style",
@@ -25,26 +21,6 @@ export default function Line({ winners, positions, grid }) {
 
   return (
     <>
-      <button
-        onClick={() => {
-          dispatch({
-            type: "recalculate style",
-            payload: {
-              winners: winners,
-              rect: {
-                item6: {
-                  width: 100,
-                  height: 5,
-                  top: 100,
-                  left: 5
-                }
-              }
-            }
-          });
-        }}
-      >
-        Click me
-      </button>
       <div style={line.style}></div>
     </>
   );
@@ -66,5 +42,7 @@ Line.defaultProps = {
     }
   },
   colour: "red",
-  winners: ["00", "11", "22", "33"]
+  // winners: ["00", "01", "02", "03"] // horizontal
+  // winners: ["10", "11", "12", "13"] // vertical
+  winners: ["00", "11", "22", "33"] // diagonal
 };

@@ -1,6 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 
-const Grid = ({ grid, setPositions, colour, winners, onClick, selIndex }) => {
+const Grid = ({
+  grid,
+  setPositions,
+  colour,
+  winners,
+  onClick,
+  selIndex,
+  jumpToInd
+}) => {
   let end = grid.length - 1;
 
   // function getWinners() {
@@ -45,6 +53,7 @@ const Grid = ({ grid, setPositions, colour, winners, onClick, selIndex }) => {
               selIndex={selIndex}
               winners={winners}
               setPositions={setPositions}
+              jumpToInd={jumpToInd}
             />
           ))
         )}
@@ -66,7 +75,8 @@ function Cell({
   onClick,
   selIndex,
   winners,
-  setPositions
+  setPositions,
+  jumpToInd
 }) {
   const [colour_, setColour_] = useState("black");
   //console.log("dooo=", selIndex, range.index, colour);
@@ -83,7 +93,7 @@ function Cell({
   useEffect(() => {
     //console.log(selIndex, range.index);
     setColour_(selIndex === range.index ? colour : "black");
-  }, [selIndex, range.index, colour, setColour_]);
+  }, [selIndex, range.index, colour]);
 
   useEffect(() => {
     // set winners to selected colour
@@ -92,6 +102,12 @@ function Cell({
       setColour_(winners.includes(item) ? colour : "black");
     }
   }, [winners, range.y, range.x, colour]);
+
+  useEffect(() => {
+    if (jumpToInd) {
+      setColour_("black");
+    }
+  }, [winners, jumpToInd]);
 
   const itemRef = useCallback(
     (ref) => {

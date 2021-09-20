@@ -11,31 +11,16 @@ const Board = ({
   // stepNumber, // current step
   player, // current player
   handleClick,
-  selIndex // function on click
+  selIndex, // function on click
+  jumpToInd
 }) => {
   const [positions, setPositions] = useState({});
-
-  // const playerStyle = {
-  //   color: player.colour,
-  //   fontWeight: "bold"
-  // };
-
-  // const normalStyle = {
-  //   color: "black",
-  //   fontWeight: "normal"
-  // };
-
-  // function setCellStyle() {
-  //   return winners.index === -1 ? normalStyle : playerStyle;
-  //   //return playerStyle;
-  // }
 
   return (
     <>
       <div>
         <Grid
           grid={grid}
-          // setCellStyle={setCellStyle}
           setPositions={setPositions}
           colour={player.colour}
           winners={winners}
@@ -43,9 +28,10 @@ const Board = ({
             handleClick(x, y, idx);
           }}
           selIndex={selIndex}
+          jumpToInd={jumpToInd}
         />
       </div>
-      {positions && winners && (
+      {positions && winners.length > 0 && (
         <Line winners={winners} positions={positions}></Line>
       )}
     </>
@@ -59,7 +45,8 @@ Board.propTypes = {
   // stepNumber: PropTypes.number,
   player: PropTypes.object,
   handleClick: PropTypes.func,
-  selIndex: PropTypes.number
+  selIndex: PropTypes.number,
+  jumpToInd: PropTypes.bool
 };
 
 function generateGrid(rows, columns, mapper) {
@@ -80,7 +67,8 @@ Board.defaultProps = {
   player: { colour: "red" },
   handleClick: (x, y, idx) => {
     //console.log(x, y, idx);
-  }
+  },
+  jumpToInd: false
 };
 
 export default Board;

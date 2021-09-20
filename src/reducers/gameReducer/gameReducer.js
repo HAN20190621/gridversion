@@ -1,59 +1,7 @@
-import { NEXT_TURN } from "../gameReducer/constants";
+import { NEXT_TURN, initialiseGame } from "../gameReducer/constants";
 
 // Simple way to deeply clone an array or object
 const clone = (x) => JSON.parse(JSON.stringify(x));
-
-// function horizontal(grid) {
-//   let temp = [];
-//   for (let y = 0; y < grid.length; y++) {
-//     const check = grid[y].every(
-//       (val, index, arr) => val && arr[0] && temp.push(val)
-//       //h.push({ y: y, x: x, index: y * (grid.length - 1) })
-//     );
-//     if (check && temp.length === grid.length) {
-//       return { type: "H", index: y };
-//     }
-//   }
-//   return false;
-// }
-
-// function vertical(grid) {
-//   //y - row x - col
-//   let temp = [];
-//   // iterate vertically
-//   for (let y = 0; y < grid.length; y++) {
-//     temp = [];
-//     for (let x = 0; x < grid.length; x++) {
-//       temp.push(grid[x][y]);
-//     }
-//     const check = temp.every((val, index, arr) => val && arr[0]);
-//     if (check && temp.length === grid.length) {
-//       return { type: "V", index: y };
-//     }
-//   }
-//   return false;
-// }
-
-// function diagonal(grid) {
-//   let temp1 = [];
-//   let temp2 = [];
-
-//   for (let i = 0, j = grid.length - 1; i <= grid.length - 1; i++) {
-//     temp1.push(grid[i][i]);
-//     temp2.push(grid[i][j--]);
-//   }
-//   // diagonal 1
-//   let check = temp1.every((val, index, arr) => val && arr[0]);
-//   if (check && temp1.length === grid.length) {
-//     return { type: "D", index: 0 };
-//   }
-//   // diagonal 2
-//   check = temp2.every((val, index, arr) => val && arr[0]);
-//   if (check && temp2.length === grid.length) {
-//     return { type: "D", index: 1 };
-//   }
-//   return null;
-// }
 
 function checkForWin(grid) {
   //let winner = {};
@@ -107,8 +55,7 @@ function checkForWin(grid) {
         });
       }
     }
-    // diagonal
-
+    // diagonal 1
     if (d1.length === grid.length) {
       check = d1.every(
         (item, index, arr) => item.val && item.val === arr[0].val
@@ -158,9 +105,8 @@ export default function gameReducer(state, action) {
       //const nextState = clone(state);
       //const cloned = Object.assign({}, history);
       const nextState = Object.assign({}, state);
-
-      const { history, turn, players, moves } = nextState;
-
+      const { history, moves } = nextState;
+      let { turn } = nextState;
       const { grid } = clone(history[history.length - 1]); // advance
 
       // If the cell already has a value, clicking on it should do nothing
@@ -176,20 +122,34 @@ export default function gameReducer(state, action) {
       // `turn` value
       grid[y][x] = turn;
 
-      const tempIdx = ((xo) => players.findIndex((player) => player.xo === xo))(
-        NEXT_TURN[turn]
-      );
+      let tempIdx = 0;
+      let player = null;
+      // check for win
+      const winners = checkForWin(grid);
+      const win = winners.length > 0;
+      // update the score
+      if (win) {
+        tempIdx = ((xo) =>
+          nextState.players.findIndex((player) => player.xo === xo))(turn);
+        nextState.players = [
+          ...state.players.slice(0, tempIdx),
+          {
+            ...state.players[tempIdx],
+            score: state.players[tempIdx].score + 1
+          },
+          ...state.players.slice(tempIdx + 1)
+        ];
+        console.log("winners=", nextState.players, turn);
+      } else {
+        // console.log("gerel=", turn);
+        tempIdx = ((xo) =>
+          nextState.players.findIndex((player) => player.xo === xo))(
+          NEXT_TURN[turn]
+        );
+        turn = NEXT_TURN[turn];
+      }
 
-      const player = players[tempIdx];
-
-      // // //     players: [
-      // // //       ...state.players.slice(0, tempIdx),
-      // // //       {
-      // // //         ...state.players[tempIdx],
-      // // //         score: state.players[tempIdx].score + 1
-      // // //       },
-      // // //       ...state.players.slice(tempIdx + 1)
-      // // //     ],
+      player = nextState.players[tempIdx];
 
       // take a copy of the previous history and append the new one
       // console.log("hannah=", history);
@@ -208,11 +168,11 @@ export default function gameReducer(state, action) {
 
       nextState.history = newHistory;
       nextState.player = player;
-      nextState.winners = checkForWin(grid);
+      nextState.winners = winners;
       nextState.selIndex = index;
       // Now that we've used this turn, we need to set the next turn. It might
       // be overkill, but I've used an object enum to do this.
-      nextState.turn = NEXT_TURN[turn];
+      nextState.turn = turn;
       // new move
       const newMove = setMoveTo(x, y, newHistory.length - 1)();
       nextState.moves = [...moves, newMove];
@@ -230,25 +190,45 @@ export default function gameReducer(state, action) {
 
       // go back a step
       //const nextState = clone(state);
-      const { history, moves } = state; //nextState;
-      // get history
+      const { history, moves, winners, turn } = state; //nextState;
 
+      if (moves.length - 1 === moveIndex) return state;
+
+      let { players } = state;
+      // get history
       const newHistory = clone(
         moveIndex === 0 ? history.slice(0, 1) : history.slice(0, moveIndex + 1)
       );
-      const { turn, player, winners } = newHistory[newHistory.length - 1];
+      const { player } = newHistory[newHistory.length - 1];
       //
       //console.log(turn);
       //
+
+      if (winners.length > 0) {
+        const tempIdx = ((xo) =>
+          players.findIndex((player) => player.xo === xo))(turn);
+        players = [
+          ...state.players.slice(0, tempIdx),
+          {
+            ...state.players[tempIdx],
+            score: state.players[tempIdx].score - 1
+          },
+          ...state.players.slice(tempIdx + 1)
+        ];
+      }
+
       const newMoves = moves.slice(0, moveIndex + 1);
+      // update winners
+
       // set new object
       return {
         ...state,
-        turn: NEXT_TURN[turn],
+        turn: turn,
         player: player,
-        winners: winners,
+        winners: [],
         history: newHistory,
-        moves: newMoves
+        moves: newMoves,
+        players: players
       };
       // nextState.turn = turn;
       // nextState.player = player;
@@ -257,21 +237,11 @@ export default function gameReducer(state, action) {
       // return nextState;
     }
 
-    // case "request to start": {
-    //   players = state.players;
-    //   tempIdx = Math.floor(Math.random() * 2);
-    //   const first = players[tempIdx].xo;
-    //   return {
-    //     ...state,
-    //     firstPlayer: first,
-    //     currentPlayer: players[tempIdx],
-    //     winners: {
-    //       xo: "",
-    //       winners: [],
-    //       score: 0
-    //     }
-    //   };
-    // }
+    case "request to start": {
+      const { players, moveTo } = action.payload;
+      const newState = initialiseGame(players, moveTo);
+      return newState;
+    }
 
     // case "update winners": {
     //   xo = action.payload.xo;

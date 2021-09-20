@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import About from './components/About';
-import Footer from './components/Footer';
-import Header from './components/Header';
-import Players from './components/Players';
-import Game from './components/Game';
-import debounce from 'lodash/debounce';
-import './styles.css';
+import React, { useState, useEffect, useRef } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import About from "./components/About";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import Players from "./components/Players";
+import Game from "./components/Game";
+import debounce from "lodash/debounce";
+import "./styles.css";
 
 //https://kyleshevlin.com/tic-tac-toe
 
@@ -36,25 +36,25 @@ const initialisePlayers = () => {
   const players = [
     {
       rank: 1,
-      name: '',
-      colour: '',
-      xo: '',
-      status: '',
-      score: 0,
+      name: "Hannah",
+      colour: "pink",
+      xo: "X",
+      status: "",
+      score: 0
     },
     {
       rank: 2,
-      name: '',
-      colour: '',
-      xo: '',
-      status: '',
-      score: 0,
-    },
+      name: "PeterPan",
+      colour: "yellow",
+      xo: "O",
+      status: "",
+      score: 0
+    }
   ];
   const xoId = Math.floor(Math.random() * 2); // where 1 - X  2 - O
-  const xo = ['X', 'O'][xoId];
+  const xo = ["X", "O"][xoId];
   players[xoId].xo = xo;
-  players[xoId === 0 ? 1 : 0].xo = xo === 'X' ? 'O' : 'X';
+  players[xoId === 0 ? 1 : 0].xo = xo === "X" ? "O" : "X";
   return players;
 };
 
@@ -74,7 +74,7 @@ const App = () => {
     const rect = appRef.current.getBoundingClientRect();
     setCoords({
       left: rect.x + rect.width / 2, // add half the width of the button for center
-      top: rect.y + window.scrollY + 50, // add scrollY offset, as soon as getBoundingClientRect takes on screen coords
+      top: rect.y + window.scrollY + 50 // add scrollY offset, as soon as getBoundingClientRect takes on screen coords
     });
   };
 
@@ -82,9 +82,9 @@ const App = () => {
 
   useEffect(() => {
     // event listener
-    window.addEventListener('resize', updateCoords);
+    window.addEventListener("resize", updateCoords);
     return () => {
-      window.removeEventListener('resize', updateCoords);
+      window.removeEventListener("resize", updateCoords);
     };
   }, [updateCoords]);
 
@@ -125,9 +125,9 @@ const App = () => {
 
 const styles = {
   app: {
-    position: 'absolute',
-    margin: '20px 20px',
-  },
+    position: "absolute",
+    margin: "20px 20px"
+  }
   //width: 200,
   //transform: "translate(-100px, -100%)"
 };
