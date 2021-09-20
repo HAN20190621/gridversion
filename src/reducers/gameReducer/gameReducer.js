@@ -62,13 +62,29 @@ function checkForWin(grid) {
   let d1 = [];
   let d2 = [];
 
+  // if number of items are < grid.length then jsut exit
+  if (
+    grid.flat().map((item) => {
+      return item;
+    }).length <
+    grid.length - 1
+  )
+    return {};
+
   for (let i = 0, j = grid.length - 1; i <= grid.length - 1; i++, j--) {
-    grid[i][i] && d1.push(grid[i][i]); // diagonal 1
-    grid[j][i] && d2.push(grid[j][i]); // diagonal 2
+    grid[i][i] && d1.push({ val: grid[i][i], index: `${i}${i}` }); //{ r: i, c: i } }); // diagonal 1
+    grid[j][i] && d2.push({ val: grid[j][i], index: `${j}${i}` }); //{ r: j, c: i } }); // diagonal 2
+
+    //if (i === 3) console.log(d2);
+
     // horizontal
-    check = grid[i].every((val, index, arr) => val && val === arr[0]);
-    if (check && grid[i].length === grid.length) {
-      return { type: "H", index: i };
+    if (grid[i].length === grid.length) {
+      check = grid[i].every((val, index, arr) => val && val === arr[0]);
+      if (check) {
+        return grid[i].map((item, index) => {
+          return `${i}${index}`; //{ r: i, c: index };
+        }); //return { type: "H", index: i };
+      }
     }
     // vertical
     v = grid
@@ -83,29 +99,45 @@ function checkForWin(grid) {
       check = v.every((item, index, arr) => {
         return item && item === arr[0];
       });
-      //
-      if (check && v.length === grid.length) {
-        return { type: "V", index: i };
+
+      if (check) {
+        return v.map((item, index) => {
+          // return { r: index, c: i };
+          return `${index}${i}`;
+        });
       }
     }
     // diagonal
-    check = d1.every((item, index, arr) => item && item === arr[0]);
-    if (check && d1.length === grid.length) {
-      return { type: "D", index: 0 };
+
+    if (d1.length === grid.length) {
+      check = d1.every(
+        (item, index, arr) => item.val && item.val === arr[0].val
+      );
+      if (check)
+        return d1.map((item, index) => {
+          return item.index;
+        }); //return { type: "D", index: 0 };
     }
     // diagonal 2
-    check = d2.every((item, index, arr) => item && item === arr[0]);
-    if (check && d2.length === grid.length) {
-      return { type: "D", index: 1 };
+    if (d2.length === grid.length) {
+      check = d2.every(
+        (item, index, arr) => item.val && item.val === arr[0].val
+      );
+      if (check)
+        return d2.map((item, index) => {
+          return item.index;
+        }); //return { type: "D", index: 0 };
     }
   }
+
   // draw
-  check =
-    grid.flat().filter((item) => {
-      return item;
-    }).length ===
-    grid.length * grid.length;
-  //console.log(check);
+  // check =
+  //   grid.flat().filter((item) => {
+  //     return item;
+  //   }).length ===
+  //   grid.length * grid.length;
+
+  return [];
 }
 
 // game reducer
@@ -119,17 +151,17 @@ export default function gameReducer(state, action) {
   //let xo, players, tempIdx, winners, player, turn, newState, score;
   switch (action.type) {
     case "click": {
-      const { x, y, index } = action.payload;
-
+      const { x, y, index, setMoveTo } = action.payload;
       // Since we need immutable updates, I often find the simplest thing to do
       // is to clone the current state, and then use mutations on the clone to
       // make updates for the next state
-      const nextState = clone(state);
+      //const nextState = clone(state);
+      //const cloned = Object.assign({}, history);
+      const nextState = Object.assign({}, state);
 
-      const { history, turn, players, winners } = nextState;
-      const { grid } = history[history.length - 1]; // advance
+      const { history, turn, players, moves } = nextState;
 
-      //console.log(winners);
+      const { grid } = clone(history[history.length - 1]); // advance
 
       // If the cell already has a value, clicking on it should do nothing
       // Also, pay attention, because our rows are first, the `y` value is the
@@ -137,6 +169,8 @@ export default function gameReducer(state, action) {
       if (grid[y][x]) {
         return state;
       }
+
+      //console.log(turn);
 
       // If we're here in our program, we can assign this cell to the current
       // `turn` value
@@ -147,8 +181,19 @@ export default function gameReducer(state, action) {
       );
 
       const player = players[tempIdx];
-      nextState.player = player;
+
+      // // //     players: [
+      // // //       ...state.players.slice(0, tempIdx),
+      // // //       {
+      // // //         ...state.players[tempIdx],
+      // // //         score: state.players[tempIdx].score + 1
+      // // //       },
+      // // //       ...state.players.slice(tempIdx + 1)
+      // // //     ],
+
       // take a copy of the previous history and append the new one
+      // console.log("hannah=", history);
+
       const newHistory = [
         ...state.history,
         {
@@ -157,27 +202,24 @@ export default function gameReducer(state, action) {
           index: index,
           grid: grid,
           turn: turn,
-          player: player,
-          winners: winners
+          player: player
         }
       ];
-      nextState.history = newHistory;
 
-      checkForWin(grid);
-      //if (checkForWin(grid)) {
-      //  nextState.status = "success";
-      //  return nextState;
-      //}
+      nextState.history = newHistory;
+      nextState.player = player;
+      nextState.winners = checkForWin(grid);
+      nextState.selIndex = index;
+      // Now that we've used this turn, we need to set the next turn. It might
+      // be overkill, but I've used an object enum to do this.
+      nextState.turn = NEXT_TURN[turn];
+      // new move
+      const newMove = setMoveTo(x, y, newHistory.length - 1)();
+      nextState.moves = [...moves, newMove];
 
       // if (checkForDraw(flatGrid)) {
       //   return getInitialState();
       // }
-
-      // Now that we've used this turn, we need to set the next turn. It might
-      // be overkill, but I've used an object enum to do this.
-      nextState.turn = NEXT_TURN[turn];
-
-      // We'll add checks for winning or drawing soon
 
       return nextState;
     }
@@ -185,19 +227,34 @@ export default function gameReducer(state, action) {
     case "move to": {
       // get the previous step
       const { moveIndex } = action.payload;
+
       // go back a step
-      const nextState = clone(state);
-      const { history } = nextState;
+      //const nextState = clone(state);
+      const { history, moves } = state; //nextState;
       // get history
-      const newHistory =
-        moveIndex === 0 ? history.slice(0, 1) : history.slice(0, moveIndex + 1);
+
+      const newHistory = clone(
+        moveIndex === 0 ? history.slice(0, 1) : history.slice(0, moveIndex + 1)
+      );
       const { turn, player, winners } = newHistory[newHistory.length - 1];
+      //
+      //console.log(turn);
+      //
+      const newMoves = moves.slice(0, moveIndex + 1);
       // set new object
-      nextState.turn = turn;
-      nextState.player = player;
-      nextState.winners = winners;
-      nextState.history = newHistory;
-      return nextState;
+      return {
+        ...state,
+        turn: NEXT_TURN[turn],
+        player: player,
+        winners: winners,
+        history: newHistory,
+        moves: newMoves
+      };
+      // nextState.turn = turn;
+      // nextState.player = player;
+      // nextState.winners = winners;
+      // nextState.history = newHistory;
+      // return nextState;
     }
 
     // case "request to start": {

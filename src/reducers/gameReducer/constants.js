@@ -13,7 +13,23 @@ const getNextTurn = () => {
 };
 
 const initialiseWinners = () => {
-  return { xo: "", winners: [], score: 0 };
+  //return { xo: "", winners: [], score: 0 };
+  return [];
+};
+
+const initialiseMoves = (moveTo) => {
+  const desc = "Go to game start";
+  return (
+    <li key={0}>
+      <button
+        onClick={() => {
+          moveTo(0);
+        }}
+      >
+        {desc}
+      </button>
+    </li>
+  );
 };
 
 function generateGrid(rows, columns, mapper) {
@@ -27,13 +43,14 @@ const newTicTacToeGrid = generateGrid(4, 4, () => {
   return null;
 });
 
-export const initialiseGame = (players) => {
+export const initialiseGame = (players, moveTo) => {
   const turn = getNextTurn();
   const tempIdx = ((xo) => players.findIndex((player) => player.xo === xo))(
     turn
   );
   const currentPlayer = players[tempIdx];
   const winners = initialiseWinners();
+  const moves = [initialiseMoves(moveTo)];
   let history = [
     {
       x: -1,
@@ -51,6 +68,8 @@ export const initialiseGame = (players) => {
     players: players,
     turn: turn,
     player: currentPlayer,
-    winners: winners
+    winners: winners,
+    selIndex: -1,
+    moves: moves
   };
 };
