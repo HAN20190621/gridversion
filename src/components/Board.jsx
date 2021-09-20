@@ -7,40 +7,42 @@ import Line from "./Line";
 const Board = ({
   grid,
   winners, // winners
-  selItems, // list of selected items
-  stepNumber, // current step
+  // selItems, // list of selected items
+  // stepNumber, // current step
   player, // current player
-  handleClick // function on click
+  handleClick,
+  selIndex // function on click
 }) => {
   const [positions, setPositions] = useState({});
 
-  const playerStyle = {
-    color: player.colour,
-    fontWeight: "bold"
-  };
+  // const playerStyle = {
+  //   color: player.colour,
+  //   fontWeight: "bold"
+  // };
 
-  const normalStyle = {
-    color: "black",
-    fontWeight: "normal"
-  };
+  // const normalStyle = {
+  //   color: "black",
+  //   fontWeight: "normal"
+  // };
 
-  function setCellStyle(index) {
-    return winners.includes(index) || selItems[stepNumber - 1] === index
-      ? playerStyle
-      : normalStyle;
-  }
+  // function setCellStyle() {
+  //   return winners.index === -1 ? normalStyle : playerStyle;
+  //   //return playerStyle;
+  // }
 
   return (
     <>
       <div>
         <Grid
           grid={grid}
-          setCellStyle={setCellStyle}
+          // setCellStyle={setCellStyle}
           setPositions={setPositions}
+          colour={player.colour}
+          winners={winners}
           onClick={(x, y, idx) => {
-            //console.log(x, y, idx);
             handleClick(x, y, idx);
           }}
+          selIndex={selIndex}
         />
       </div>
       {positions && winners && (
@@ -53,10 +55,11 @@ const Board = ({
 Board.propTypes = {
   grid: PropTypes.array,
   winners: PropTypes.array,
-  selItems: PropTypes.array,
-  stepNumber: PropTypes.number,
+  // selItems: PropTypes.array,
+  // stepNumber: PropTypes.number,
   player: PropTypes.object,
-  handleClick: PropTypes.func
+  handleClick: PropTypes.func,
+  selIndex: PropTypes.number
 };
 
 function generateGrid(rows, columns, mapper) {
@@ -71,7 +74,7 @@ function generateGrid(rows, columns, mapper) {
 
 Board.defaultProps = {
   grid: generateGrid(3, 3, () => null),
-  winners: [3, 4, 5],
+  winners: [],
   selItems: [0, 1, 2],
   stepNumber: 1,
   player: { colour: "red" },

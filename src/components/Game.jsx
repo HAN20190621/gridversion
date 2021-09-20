@@ -7,20 +7,20 @@ import gameReducer from "../reducers/gameReducer/gameReducer";
 import { initialiseGame } from "../reducers/gameReducer/constants";
 // import _ from "lodash"; // included in Create-React-App by default and imported as underscore
 
-const initialiseMoves = (moveTo, index) => {
-  const desc = "Go to game start";
-  return (
-    <li key={index}>
-      <button
-        onClick={() => {
-          moveTo(0);
-        }}
-      >
-        {desc}
-      </button>
-    </li>
-  );
-};
+// const initialiseMoves = (moveTo, index) => {
+//   const desc = "Go to game start";
+//   return (
+//     <li key={index}>
+//       <button
+//         onClick={() => {
+//           moveTo(0);
+//         }}
+//       >
+//         {desc}
+//       </button>
+//     </li>
+//   );
+// };
 
 export default function Game(props) {
   // const [history, setHistory] = useState([
@@ -32,13 +32,13 @@ export default function Game(props) {
 
   const [game, dispatch] = useReducer(
     gameReducer,
-    initialiseGame(props.players)
+    initialiseGame(props.players, moveTo)
   );
 
   const [selItems, setSelItems] = useState([]);
   const [stepNumber, setStepNumber] = useState(0);
   const [isNext, setIsNext] = useState(true); // next player
-  const [moves, setMoves] = useState([initialiseMoves(moveTo, 0)]);
+  // const [moves, setMoves] = useState([initialiseMoves(moveTo, 0)]);
   const [sortAsc, setSortAsc] = useState(true);
   const [jumpToInd, setMoveToInd] = useState(false);
   const [status, setStatus] = useState(""); //game status
@@ -83,6 +83,24 @@ export default function Game(props) {
   //   }
   // }, [history, stepNumber]);
 
+  function setMoveTo(x, y, length) {
+    const desc = `Go to move ${length} (${y}, ${x})`;
+    return () => {
+      return (
+        <li key={`${y}-${x}`}>
+          <button
+            onClick={() => {
+              //setMoveToInd(true);
+              moveTo(length);
+            }}
+          >
+            {desc}
+          </button>
+        </li>
+      );
+    };
+  }
+
   function handleClick(x, y, index) {
     //console.log(game.history);
     // set current player - next turn
@@ -92,31 +110,32 @@ export default function Game(props) {
       payload: {
         x: x,
         y: y,
-        index: index
+        index: index,
+        setMoveTo: setMoveTo
       }
     });
 
     // update moves - lagging???
-    const { history } = game;
-    const desc = `Go to move ${history.length} (${y}, ${x})`;
-    const newMove = (() => {
-      return (
-        <li key={history.length}>
-          <button
-            onClick={() => {
-              //setMoveToInd(true);
-              moveTo(history.length);
-            }}
-          >
-            {desc}
-          </button>
-        </li>
-      );
-    })();
+    // const { history } = game;
+    // const desc = `Go to move ${history.length} (${y}, ${x})`;
+    // const newMove = (() => {
+    //   return (
+    //     <li key={`${y}-${x}`}>
+    //       <button
+    //         onClick={() => {
+    //           //setMoveToInd(true);
+    //           moveTo(history.length);
+    //         }}
+    //       >
+    //         {desc}
+    //       </button>
+    //     </li>
+    //   );
+    // })();
     //
-    setMoves((prev) => {
-      return [...prev, newMove];
-    });
+    // setMoves((prev) => {
+    //   return [...prev, newMove];
+    // });
 
     // const copyHistory = history.history.slice(0, stepNumber + 1); // advance
     // const current = copyHistory[copyHistory.length - 1];
@@ -268,10 +287,10 @@ export default function Game(props) {
       }
     });
 
-    setMoves((prev) => {
-      const newMoves = prev.slice(0, moveIndex + 1);
-      return newMoves;
-    });
+    // setMoves((prev) => {
+    //   const newMoves = prev.slice(0, moveIndex + 1);
+    //   return newMoves;
+    // });
   }
 
   function handleSort(sortOrder) {
@@ -291,8 +310,19 @@ export default function Game(props) {
 
   function getWinners() {
     const { winners } = game;
-    //console.log(winners.winners);
-    return winners.winners;
+    //console.log(winners);
+    return winners;
+  }
+
+  function getMoves() {
+    const { moves } = game;
+    return moves;
+  }
+
+  function getSelIndex() {
+    const { selIndex } = game;
+    //console.log(selIndex);
+    return selIndex;
   }
 
   function getCurrentPlayer() {
@@ -333,11 +363,12 @@ export default function Game(props) {
             <Board
               grid={getGrid()}
               winners={getWinners()}
-              selItems={selItems}
-              stepNumber={stepNumber}
-              currPlayer={getCurrentPlayer()}
+              player={getCurrentPlayer()}
               handleClick={handleClick}
-              jumpToInd={jumpToInd} // indicate user to move to previous move
+              selIndex={getSelIndex()}
+              // selItems={selItems}
+              // stepNumber={stepNumber}
+              // jumpToInd={jumpToInd} // indicate user to move to previous move
             />
             <div className="game-info">
               <ToggleButton
@@ -346,7 +377,9 @@ export default function Game(props) {
                 changeOpacity={false}
               />
               <ol reversed={!sortAsc}>
-                {sortAsc ? moves.slice().sort() : moves.slice().reverse()}
+                {sortAsc
+                  ? getMoves().slice().sort()
+                  : getMoves().slice().reverse()}
               </ol>
             </div>
           </div>
@@ -390,7 +423,7 @@ Game.propTypes = {
 Game.defaultProps = {
   players: initialisePlayers(),
   squares: Array(9).fill(null),
-  winners: ["x"],
+  winners: [],
   selItems: [0, 12, 3, 4],
   jumpToInd: true,
   onClick: () => {}

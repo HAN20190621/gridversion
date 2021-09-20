@@ -5,15 +5,19 @@ const NONE = {};
 const initialiseState = { style: NONE };
 
 // this component draws a line on the winner (squares)
-export default function Line({ winners, positions }) {
+export default function Line({ winners, positions, grid }) {
   const [line, dispatch] = useReducer(lineReducer, initialiseState);
+
+  //console.log("positions=", positions);
+  // const x = ["00", "01", "02", "01"];
+  // console.log(x.sort()[0]); // 1
 
   const setLine = useCallback(() => {
     dispatch({
       type: "recalculate style",
-      payload: { winners: winners, rect: positions }
+      payload: { winners: winners, rect: positions, grid: grid }
     });
-  }, [winners, positions]);
+  }, [winners, positions, grid]);
 
   useEffect(() => {
     setLine();
@@ -26,7 +30,7 @@ export default function Line({ winners, positions }) {
           dispatch({
             type: "recalculate style",
             payload: {
-              winners: [2, 4, 6],
+              winners: winners,
               rect: {
                 item6: {
                   width: 100,
@@ -62,5 +66,5 @@ Line.defaultProps = {
     }
   },
   colour: "red",
-  winners: [8, 4, 0]
+  winners: ["00", "11", "22", "33"]
 };
