@@ -28,8 +28,8 @@ export default function Line({ winners, positions, grid }) {
 
 Line.propTypes = {
   winners: PropTypes.array,
-  positions: PropTypes.object
-  //colour: PropTypes.string,
+  positions: PropTypes.object,
+  grid: PropTypes.array
 };
 
 Line.defaultProps = {

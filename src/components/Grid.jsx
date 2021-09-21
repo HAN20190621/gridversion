@@ -11,22 +11,6 @@ const Grid = ({
 }) => {
   let end = grid.length - 1;
 
-  // function getWinners() {
-  //   switch (winners.type) {
-  //     case "H":
-  //       break;
-  //     case "V":
-  //       break;
-  //     case "D1":
-  //       // code block
-  //       break;
-  //     case "D2":
-  //       break;
-  //     default:
-  //     // code block
-  //   }
-  // }
-
   return (
     <div style={{ display: "inline-block" }}>
       <div
@@ -104,9 +88,8 @@ function Cell({
   }, [winners, range.y, range.x, colour]);
 
   useEffect(() => {
-    if (jumpToInd) {
-      setColour_("black");
-    }
+    if (winners.length > 0) return;
+    if (jumpToInd) setColour_("black");
   }, [winners, jumpToInd]);
 
   const itemRef = useCallback(
@@ -132,7 +115,11 @@ function Cell({
       <button
         ref={itemRef}
         type="button"
-        style={style}
+        style={{
+          ...style,
+          fontSize: "30px",
+          backgroundColor: "lightgreen"
+        }}
         onClick={() => {
           //(colIdx+rowIdx) + rowIdx*MAX(coldIdx)
           //console.log(range.x + " " + range.y + " " + idx + " " + range.end);

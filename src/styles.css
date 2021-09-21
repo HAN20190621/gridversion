@@ -18,11 +18,11 @@ body {
 } */
 
 .container {
-  max-width: 600px;
-  margin: 30px auto;
+  /* max-width: 600px; */
+  /* margin: 30px auto;
   overflow: auto;
-  min-height: 300px;
-  border: 1px solid steelblue;
+  min-height: 300px; */
+  /* border: 1px solid steelblue; */
   padding: 30px;
   border-radius: 5px;
   background-color: lawngreen;
@@ -174,21 +174,25 @@ body {
   align-items: center;
 }
 
-.board-container {
-  display: inline-block;
-  position: relative;
-  background-color: red;
-  /* height: 180px;
+/* .board-container { */
+/* display: inline-block;
+  position: relative; */
+/* background-color: red; */
+/* height: 180px;
   width: 165px; */
-}
+/* } */
 
 .board {
-  position: absolute;
-  /* border: 1px solid purple; */
+  position: relative;
+  border: inherit;
   align-items: center;
   width: inherit;
   height: inherit;
-  /* no-repeat 0px 0px / 100px 100px; */
+  padding: 20px;
+  border-radius: 5px;
+  background-color: rgb(47, 144, 255);
+  border: red;
+  border: 1px solid yellow;
 }
 
 .board.stack-top {

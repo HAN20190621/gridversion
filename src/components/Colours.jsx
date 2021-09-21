@@ -1,7 +1,7 @@
 // https://dev.to/ramonak/react-how-to-create-a-custom-button-group-component-in-5-minutes-3lfd
-import React from 'react';
-import Button from './Button';
-import PropTypes from 'prop-types';
+import React from "react";
+import Button from "./Button";
+import PropTypes from "prop-types";
 
 function Colours({ colours, selectedColour, setColour }) {
   // return selected colour to parent
@@ -20,7 +20,7 @@ function Colours({ colours, selectedColour, setColour }) {
     <>
       {colours.map((item, index) => (
         <Button
-          className={selectedColour === item ? 'btn btn-selected' : 'btn'}
+          className={selectedColour === item ? "btn btn-selected" : "btn"}
           key={index}
           text={item}
           id={index}
@@ -35,10 +35,10 @@ function Colours({ colours, selectedColour, setColour }) {
 Colours.propTypes = {
   colours: PropTypes.array,
   selectedColour: PropTypes.string,
-  setColour: PropTypes.func,
+  setColour: PropTypes.func
 };
 Colours.defaultProps = {
-  colours: ['pink', 'yellow', 'green'],
+  colours: ["pink", "yellow", "green"]
 };
 
 export default Colours;
