@@ -10,7 +10,7 @@ function checkForWin(grid) {
   let d1 = [];
   let d2 = [];
 
-  // if number of items are < grid.length then jsut exit
+  // if number of items are < grid.length then just exit
   if (
     grid.flat().map((item) => {
       return item;
@@ -144,8 +144,8 @@ export default function gameReducer(state, action) {
       } else {
         tempIdx = ((xo) =>
           nextState.players.findIndex((player) => player.xo === xo))(
-          NEXT_TURN[turn]
-        );
+            NEXT_TURN[turn]
+          );
         turn = NEXT_TURN[turn];
       }
 
