@@ -106,18 +106,19 @@ export default function gameReducer(state, action) {
       //const cloned = Object.assign({}, history);
       const nextState = Object.assign({}, state);
       const { history, moves } = nextState;
-      let { turn } = nextState;
+      let { turn, winners } = nextState;
       const { grid } = clone(history[history.length - 1]); // advance
 
       // If the cell already has a value, clicking on it should do nothing
       // Also, pay attention, because our rows are first, the `y` value is the
       // first index, the `x` value second. This takes some getting used to.
-      if (grid[y][x]) {
+      if (grid[y][x] || winners.length > 0) {
         return state;
       }
 
       //console.log(turn);
 
+      //const grid_clone = clone(grid);
       // If we're here in our program, we can assign this cell to the current
       // `turn` value
       grid[y][x] = turn;
@@ -125,7 +126,7 @@ export default function gameReducer(state, action) {
       let tempIdx = 0;
       let player = null;
       // check for win
-      const winners = checkForWin(grid);
+      winners = checkForWin(grid); //grid);
       const win = winners.length > 0;
       // update the score
       if (win) {
@@ -139,9 +140,8 @@ export default function gameReducer(state, action) {
           },
           ...state.players.slice(tempIdx + 1)
         ];
-        console.log("winners=", nextState.players, turn);
+        //console.log("winners=", nextState.players, turn);
       } else {
-        // console.log("gerel=", turn);
         tempIdx = ((xo) =>
           nextState.players.findIndex((player) => player.xo === xo))(
           NEXT_TURN[turn]
