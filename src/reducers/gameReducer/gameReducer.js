@@ -190,7 +190,7 @@ export default function gameReducer(state, action) {
 
       // go back a step
       //const nextState = clone(state);
-      const { history, moves, winners, turn } = state; //nextState;
+      const { history, moves, winners } = state; //nextState;
 
       if (moves.length - 1 === moveIndex) return state;
 
@@ -199,7 +199,7 @@ export default function gameReducer(state, action) {
       const newHistory = clone(
         moveIndex === 0 ? history.slice(0, 1) : history.slice(0, moveIndex + 1)
       );
-      const { player } = newHistory[newHistory.length - 1];
+      const { player, turn } = newHistory[newHistory.length - 1];
       //
       //console.log(turn);
       //

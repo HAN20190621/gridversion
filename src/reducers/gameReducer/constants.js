@@ -39,10 +39,6 @@ function generateGrid(rows, columns, mapper) {
   return arr;
 }
 
-const newTicTacToeGrid = generateGrid(4, 4, () => {
-  return null;
-});
-
 export const initialiseGame = (players, moveTo) => {
   const turn = getNextTurn();
   const tempIdx = ((xo) => players.findIndex((player) => player.xo === xo))(
@@ -51,12 +47,14 @@ export const initialiseGame = (players, moveTo) => {
   const currentPlayer = players[tempIdx];
   const winners = initialiseWinners();
   const moves = [initialiseMoves(moveTo)];
+  const rows = 4;
+  const columns = 4;
   let history = [
     {
       x: -1,
       y: -1,
       index: -1,
-      grid: newTicTacToeGrid,
+      grid: generateGrid(rows, columns, () => { return null }),
       turn: turn,
       player: currentPlayer,
       winners: winners // winning marks
@@ -64,6 +62,7 @@ export const initialiseGame = (players, moveTo) => {
   ];
 
   return {
+    gridSize: rows * columns,
     history: history,
     players: players,
     turn: turn,
