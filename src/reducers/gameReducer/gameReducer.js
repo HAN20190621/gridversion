@@ -230,11 +230,6 @@ export default function gameReducer(state, action) {
         moves: newMoves,
         players: players
       };
-      // nextState.turn = turn;
-      // nextState.player = player;
-      // nextState.winners = winners;
-      // nextState.history = newHistory;
-      // return nextState;
     }
 
     case "request to start": {
@@ -242,15 +237,6 @@ export default function gameReducer(state, action) {
       const newState = initialiseGame(players, moveTo);
       return newState;
     }
-
-    // case "update winners": {
-    //   xo = action.payload.xo;
-    //   winners = action.payload.winners;
-    //   currentPlayer = state.currentPlayer;
-    //   firstPlayer = state.firstPlayer;
-    //   score = state.winners.score + 1;
-    //   players = [...state.players];
-    //   tempIdx = ((xo) => players.findIndex((player) => player.xo === xo))(xo);
     //   newState = {
     //     players: [
     //       ...state.players.slice(0, tempIdx),
@@ -270,41 +256,6 @@ export default function gameReducer(state, action) {
     //   };
     //   return newState;
     // }
-
-    // case "reset winners": {
-    //   const { jumpToInd } = action.payload;
-    //   winners = state.winners; //({ winners }) = state;
-    //   currentPlayer = state.currentPlayer;
-    //   firstPlayer = state.firstPlayer;
-    //   score = winners.score + (jumpToInd ? -1 : 1);
-    //   if (winners.score > 0) {
-    //     players = [...state.players];
-    //     tempIdx = ((xo) => players.findIndex((player) => player.xo === xo))(
-    //       winners.xo
-    //     );
-    //     newState = {
-    //       players: [
-    //         ...state.players.slice(0, tempIdx),
-    //         {
-    //           ...state.players[tempIdx],
-    //           score: state.players[tempIdx].score + (jumpToInd ? -1 : 1)
-    //         },
-    //         ...state.players.slice(tempIdx + 1)
-    //       ],
-    //       winners: {
-    //         xo: "",
-    //         winners: [],
-    //         score: score
-    //       },
-    //       currentPlayer: currentPlayer,
-    //       firstPlayer: firstPlayer
-    //     };
-    //     return newState;
-    //   } else {
-    //     return { ...state };
-    //   }
-    // }
     default:
-    //   throw new Error(); //do nothing;
   }
 }
