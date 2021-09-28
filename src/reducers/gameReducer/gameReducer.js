@@ -144,8 +144,8 @@ export default function gameReducer(state, action) {
       } else {
         tempIdx = ((xo) =>
           nextState.players.findIndex((player) => player.xo === xo))(
-            NEXT_TURN[turn]
-          );
+          NEXT_TURN[turn]
+        );
         turn = NEXT_TURN[turn];
       }
 
@@ -191,7 +191,6 @@ export default function gameReducer(state, action) {
       // go back a step
       //const nextState = clone(state);
       const { history, moves, winners } = state; //nextState;
-
       if (moves.length - 1 === moveIndex) return state;
 
       let { players } = state;
@@ -205,8 +204,10 @@ export default function gameReducer(state, action) {
       //
 
       if (winners.length > 0) {
+        const currentPlayer = state.player;
         const tempIdx = ((xo) =>
-          players.findIndex((player) => player.xo === xo))(turn);
+          players.findIndex((player) => player.xo === xo))(currentPlayer.xo);
+
         players = [
           ...state.players.slice(0, tempIdx),
           {
