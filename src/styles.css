@@ -40,6 +40,15 @@ body {
   margin-bottom: 20px;
 }
 
+.move {
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+  padding-left: 5px;
+  background-color: black;
+  color: white;
+}
+
 .btn {
   border: none;
   font-size: 17px;
@@ -77,6 +86,7 @@ body {
   display: block;
   width: 100%;
 }
+
 */ footer {
   margin-top: 30px;
   text-align: center;

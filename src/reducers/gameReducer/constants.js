@@ -22,6 +22,7 @@ const initialiseMoves = (moveTo) => {
   return (
     <li key={0}>
       <button
+        className="move"
         onClick={() => {
           moveTo(0);
         }}
@@ -54,7 +55,9 @@ export const initialiseGame = (players, moveTo) => {
       x: -1,
       y: -1,
       index: -1,
-      grid: generateGrid(rows, columns, () => { return null }),
+      grid: generateGrid(rows, columns, () => {
+        return null;
+      }),
       turn: turn,
       player: currentPlayer,
       winners: winners // winning marks
