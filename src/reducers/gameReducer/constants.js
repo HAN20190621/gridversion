@@ -48,8 +48,10 @@ export const initialiseGame = (players, moveTo) => {
   const currentPlayer = players[tempIdx];
   const winners = initialiseWinners();
   const moves = [initialiseMoves(moveTo)];
-  const rows = 4;
-  const columns = 4;
+  //const rows = 4;
+  //const columns = 4;
+  const rows = 3;
+  const columns = 3;
   let history = [
     {
       x: -1,

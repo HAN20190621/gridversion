@@ -15,7 +15,8 @@ const Grid = ({
     <div style={{ display: "inline-block" }}>
       <div
         style={{
-          background: "#000",
+          // background: "#000",
+          //background: "red",
           display: "grid",
           gridTemplateRows: `repeat(${grid.length}, 1fr)`,
           gridTemplateColumns: `repeat(${grid[0].length},1fr)`,
