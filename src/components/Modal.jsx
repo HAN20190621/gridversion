@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 
 //https://codesandbox.io/s/zealous-waterfall-s76w2?file=/src/TooltipPopover.js
 //blog.logRocket.com/learn-react-portals-by-example/
@@ -13,3 +14,15 @@ export default function Modal({ show, id, children }) {
   //const target = usePortal(id);
   return createPortal(show ? children : null, document.getElementById(id));
 }
+
+Modal.propTypes = {
+  show: PropTypes.bool,
+  id: PropTypes.string,
+  id: PropTypes.object,
+};
+
+Modal.defaultProps = {
+  show: false,
+  id: 'modal-root',
+  children: document.getElementById('modal-root'),
+};

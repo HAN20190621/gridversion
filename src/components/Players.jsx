@@ -148,7 +148,7 @@ export default function Players({ players, setPlayers, resizing }) {
 
   return (
     <>
-      <div ref={divRef} className="players">
+      <div ref={divRef} className='players'>
         {players.map((player, idx) => (
           <Player
             key={idx}
@@ -161,7 +161,7 @@ export default function Players({ players, setPlayers, resizing }) {
           />
         ))}
       </div>
-      <Modal show={show} id="modal-root">
+      <Modal show={show} id='modal-root'>
         <EditPlayer
           player={currPlayer}
           showModal={handleShowModal}
@@ -199,4 +199,5 @@ Players.defaultProps = {
     },
   ],
   setPlayers: () => {},
+  resizing: false,
 };

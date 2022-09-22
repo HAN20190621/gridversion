@@ -25,7 +25,7 @@ function ToggleButton(props) {
   }
 
   return (
-    <div className="button-toggle">
+    <div className='button-toggle'>
       <Button sortAsc={sortAsc} onClick={() => toggleButton()}>
         {sortAsc ? 'DESC' : 'ASC'}
       </Button>

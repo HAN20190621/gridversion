@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import Grid from "./Grid";
-import Line from "./Line";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import Grid from './Grid';
+import Line from './Line';
 
 //  https://www.pluralsight.com/guides/applying-classes-conditionally-react
 const Board = ({
@@ -12,7 +12,7 @@ const Board = ({
   player, // current player
   handleClick,
   selIndex, // function on click
-  jumpToInd
+  jumpToInd,
 }) => {
   const [positions, setPositions] = useState({});
 
@@ -32,7 +32,7 @@ const Board = ({
         />
       </div>
       {positions && winners.length > 0 && (
-        <Line winners={winners} positions={positions}></Line>
+        <Line winners={winners} positions={positions} grid={grid}></Line>
       )}
     </>
   );
@@ -46,7 +46,7 @@ Board.propTypes = {
   player: PropTypes.object,
   handleClick: PropTypes.func,
   selIndex: PropTypes.number,
-  jumpToInd: PropTypes.bool
+  jumpToInd: PropTypes.bool,
 };
 
 function generateGrid(rows, columns, mapper) {
@@ -64,11 +64,11 @@ Board.defaultProps = {
   winners: [],
   selItems: [0, 1, 2],
   stepNumber: 1,
-  player: { colour: "red" },
+  player: { colour: 'red' },
   handleClick: (x, y, idx) => {
     //console.log(x, y, idx);
   },
-  jumpToInd: false
+  jumpToInd: false,
 };
 
 export default Board;

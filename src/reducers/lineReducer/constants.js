@@ -1,4 +1,5 @@
 export function getLineStyle(lineType, startPos, endPos, length, gap, div) {
+  //console.log("xxxx" + startPos + " " + endPos)
   const newStyle = {
     position: "absolute",
     backgroundColor: "green",
@@ -7,7 +8,7 @@ export function getLineStyle(lineType, startPos, endPos, length, gap, div) {
   const allowance = length * gap;
   switch (lineType) {
     case "H": {
-      console.log(div);
+      //console.log(div);
       return {
         ...newStyle,
         left: 20,
@@ -44,12 +45,12 @@ export function getLineStyle(lineType, startPos, endPos, length, gap, div) {
         top: 20, // rect.top + rect.height / 2,
         width: Math.sqrt(
           Math.pow(endPos.left - startPos.left, 2) +
-            Math.pow(
-              endPos.bottom -
-                startPos.top +
-                (startPos.height / 2 + allowance / 2),
-              2
-            )
+          Math.pow(
+            endPos.bottom -
+            startPos.top +
+            (startPos.height / 2 + allowance / 2),
+            2
+          )
         ),
         transform: "rotate(-45deg)",
         transformOrigin: "bottom right"
@@ -61,7 +62,7 @@ export function getLineStyle(lineType, startPos, endPos, length, gap, div) {
         top: 20, // rect.top + rect.height / 2,
         width: Math.sqrt(
           Math.pow(endPos.right - startPos.left, 2) +
-            Math.pow(endPos.bottom - startPos.top - gap, 2)
+          Math.pow(endPos.bottom - startPos.top - gap, 2)
         ),
         height: 5,
         //Math.sqrt(          rect.width * rect.width + rect.height * rect.height        ),

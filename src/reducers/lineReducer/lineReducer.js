@@ -2,14 +2,12 @@ import { getLineStyle } from "../lineReducer/constants";
 
 export default function lineReducer(state, action) {
   const { winners, rect } = action.payload;
+
   switch (action.type) {
     case "recalculate style": {
       if (winners.length === 0) return state;
       if (rect[Object.keys(rect)[0]] === undefined) return state;
-      //console.log(rect);
-      //console.log(grid);
       const winners_ = winners.sort();
-      //console.log(winners_);
       const grid_length = winners_.length - 1;
       const gap = 10;
       const min_ = winners_[0];
@@ -31,10 +29,11 @@ export default function lineReducer(state, action) {
         min_y === max_y
           ? "H"
           : min_x === max_x
-          ? "V"
-          : min_ === "00" && max_ === `${grid_length}${grid_length}`
-          ? "D1"
-          : "D0";
+            ? "V"
+            : min_ === "00" && max_ === `${grid_length}${grid_length}`
+              ? "D1"
+              : "D0";
+      //console.log(rect);
       // console.log(type, min_index, max_index);
       // console.log(rect[`item${min_index}`]);
       // console.log(rect[`item${max_index}`]);

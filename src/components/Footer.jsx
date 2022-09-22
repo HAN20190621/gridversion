@@ -1,19 +1,21 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Footer = () => {
-  let location = useLocation();
+const Footer = ({ location }) => {
   return (
     <>
-      {location.pathname === "/" && (
-        <footer style={{ textAlign: "center" }}>
+      {location.pathname === '/' && (
+        <footer style={{ textAlign: 'center' }}>
           <p>Copyright &copy; {new Date().getFullYear()}</p>
-          <Link to="/About">About</Link>
-          {/* <a href="/About">About</a> */}
+          <Link to='/About'>About</Link>
         </footer>
       )}
     </>
   );
+};
+
+Footer.defaultProps = {
+  location: { pathname: '/' },
 };
 
 export default Footer;
