@@ -50,8 +50,8 @@ export const initialiseGame = (players, moveTo) => {
   const moves = [initialiseMoves(moveTo)];
   //const rows = 4;
   //const columns = 4;
-  const rows = 3;
-  const columns = 3;
+  const rows = 4;
+  const columns = 4;
   let history = [
     {
       x: -1,

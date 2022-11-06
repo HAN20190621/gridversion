@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState, useReducer } from "react";
-import PropTypes from "prop-types";
-import Board from "./Board";
-import ToggleButton from "./ToggleButton";
-import Button from "./Button";
-import gameReducer from "../reducers/gameReducer/gameReducer";
-import { initialiseGame } from "../reducers/gameReducer/constants";
+import React, { useCallback, useEffect, useState, useReducer } from 'react';
+import PropTypes from 'prop-types';
+import Board from './Board';
+import ToggleButton from './ToggleButton';
+import Button from './Button';
+import gameReducer from '../reducers/gameReducer/gameReducer';
+import { initialiseGame } from '../reducers/gameReducer/constants';
 
 // import _ from "lodash"; // included in Create-React-App by default and imported as underscore
 
@@ -15,7 +15,7 @@ export default function Game(props) {
   );
 
   const [sortAsc, setSortAsc] = useState(true);
-  const [status, setStatus] = useState(""); //game status
+  const [status, setStatus] = useState(''); //game status
   const [jumpToInd, setJumpToInd] = useState(false);
 
   function setMoveTo(x, y, length) {
@@ -24,7 +24,7 @@ export default function Game(props) {
       return (
         <li key={`${y}-${x}`}>
           <button
-            className="move"
+            className='move'
             onClick={() => {
               moveTo(length);
             }}
@@ -42,13 +42,13 @@ export default function Game(props) {
     // set current player - next turn
     // update history
     dispatch({
-      type: "click",
+      type: 'click',
       payload: {
         x: x,
         y: y,
         index: index,
-        setMoveTo: setMoveTo
-      }
+        setMoveTo: setMoveTo,
+      },
     });
 
     setJumpToInd(false);
@@ -65,9 +65,9 @@ export default function Game(props) {
       turn
     );
 
-    let tempStatus = "";
+    let tempStatus = '';
     if (winners.length > 0) {
-      tempStatus = `Winner: ${player.xo}${player.name !== "" ? "-" : ""}${
+      tempStatus = `Winner: ${player.xo}${player.name !== '' ? '-' : ''}${
         player.name
       }`;
     } else if (
@@ -78,7 +78,7 @@ export default function Game(props) {
       tempStatus = "It's a draw - no winner";
     } else {
       tempStatus = `Next player: ${turn}${
-        players[tempIdx].name !== "" ? "-" : ""
+        players[tempIdx].name !== '' ? '-' : ''
       }${players[tempIdx].name}`;
     }
     setStatus(tempStatus);
@@ -94,21 +94,21 @@ export default function Game(props) {
     const { players } = game;
     // reset game - players
     dispatch({
-      type: "request to start",
+      type: 'request to start',
       payload: {
         players: players,
-        moveTo: moveTo
-      }
+        moveTo: moveTo,
+      },
     });
   }
 
   // jump to the selected position
   function moveTo(moveIndex) {
     dispatch({
-      type: "move to",
+      type: 'move to',
       payload: {
-        moveIndex: moveIndex
-      }
+        moveIndex: moveIndex,
+      },
     });
     if (moveIndex === game.moves.length - 1) return;
     // jump back to a step
@@ -121,7 +121,7 @@ export default function Game(props) {
 
   function getScore() {
     const { players } = game;
-    let temp = "";
+    let temp = '';
     players.forEach((item) => {
       // console.log(item);
       temp += `${item.name}-${item.score.toString()} `;
@@ -161,11 +161,11 @@ export default function Game(props) {
   }
 
   return (
-    <div className="game">
+    <div className='game'>
       <>
         <Button
-          text="Restart"
-          colour="green"
+          text='Restart'
+          colour='green'
           onClick={() => {
             //handle-restart - request to restart
             handleRestart();
@@ -175,13 +175,13 @@ export default function Game(props) {
         <div>Step number: {getStepNumber()}</div>
         <div>Score: {getScore()}</div>
         <div
-          className="board-container"
+          className='board-container'
           // style={{
           //   width: boardPos.width + 'px',
           //   height: boardPos.height + 'px',
           // }}
         >
-          <div className="board">
+          <div className='board'>
             <Board
               grid={getGrid()}
               winners={getWinners()}
@@ -190,14 +190,14 @@ export default function Game(props) {
               selIndex={getSelIndex()}
               jumpToInd={jumpToInd}
             />
-            <div className="game-info">
+            <div className='game-info'>
               <ToggleButton
                 toggle={handleSort}
-                labels={["Desc", "Asc"]}
+                labels={['Desc', 'Asc']}
                 changeOpacity={false}
               />
               <ol
-                style={{ backgroundColor: "black", color: "white" }}
+                style={{ backgroundColor: 'black', color: 'white' }}
                 reversed={!sortAsc}
               >
                 {sortAsc
@@ -216,40 +216,40 @@ const initialisePlayers = () => {
   const players = [
     {
       rank: 1,
-      name: "Hannah",
-      colour: "pink",
-      xo: "X",
-      status: "",
-      score: 0
+      name: 'Hannah',
+      colour: 'pink',
+      xo: 'X',
+      status: '',
+      score: 0,
     },
     {
       rank: 2,
-      name: "PeterPan",
-      colour: "yellow",
-      xo: "O",
-      status: "",
-      score: 0
-    }
+      name: 'PeterPan',
+      colour: 'yellow',
+      xo: 'O',
+      status: '',
+      score: 0,
+    },
   ];
   const xoId = Math.floor(Math.random() * 2); // where 1 - X  2 - O
-  const xo = ["X", "O"][xoId];
+  const xo = ['X', 'O'][xoId];
   players[xoId].xo = xo;
-  players[xoId === 0 ? 1 : 0].xo = xo === "X" ? "O" : "X";
+  players[xoId === 0 ? 1 : 0].xo = xo === 'X' ? 'O' : 'X';
   return players;
 };
 
 Game.propTypes = {
   players: PropTypes.array,
-  index: PropTypes.number
+  index: PropTypes.number,
 };
 
 Game.defaultProps = {
   players: initialisePlayers(),
-  squares: Array(9).fill(null),
+  squares: Array(12).fill(null),
   winners: [],
   selItems: [0, 12, 3, 4],
   jumpToInd: true,
-  onClick: () => {}
+  onClick: () => {},
 };
 
 //https://css-tricks.com/getting-to-know-the-usereducer-react-hook/
